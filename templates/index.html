@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site Parity Checker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <h1 class="text-4xl font-bold text-gray-800 mb-8 text-center">Site Parity Checker</h1>
+        
+        <!-- Form Section -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <form id="compareForm" class="space-y-4">
+                <div>
+                    <label for="old_url" class="block text-sm font-medium text-gray-700 mb-2">
+                        Old Site URL
+                    </label>
+                    <input 
+                        type="url" 
+                        id="old_url" 
+                        name="old_url" 
+                        required
+                        placeholder="https://oldsite.com"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                </div>
+                
+                <div>
+                    <label for="new_url" class="block text-sm font-medium text-gray-700 mb-2">
+                        New Site URL
+                    </label>
+                    <input 
+                        type="url" 
+                        id="new_url" 
+                        name="new_url" 
+                        required
+                        placeholder="https://newsite.com"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                </div>
+                
+                <button 
+                    type="submit"
+                    class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150"
+                >
+                    Compare Sites
+                </button>
+            </form>
+        </div>
+        
+        <!-- Loading Indicator -->
+        <div id="loading" class="hidden text-center py-8">
+            <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            <p class="mt-4 text-gray-600">Analyzing sitemaps...</p>
+        </div>
+        
+        <!-- Progress Log -->
+        <div id="progressLog" class="hidden bg-gray-900 text-green-400 font-mono text-sm rounded-lg p-4 mb-4 max-h-96 overflow-y-auto">
+            <div class="flex justify-between items-center mb-2">
+                <span class="text-white font-semibold">Progress Log</span>
+                <button id="clearLog" class="text-gray-400 hover:text-white text-xs">Clear</button>
+            </div>
+            <div id="progressContent" class="space-y-1">
+            </div>
+        </div>
+        
+        <!-- Error Message -->
+        <div id="error" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
+            <p id="errorMessage"></p>
+        </div>
+        
+        <!-- Warning Message -->
+        <div id="warning" class="hidden bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded mb-4">
+            <p class="font-semibold mb-2" id="warningTitle"></p>
+            <ul id="warningList" class="list-disc list-inside text-sm space-y-1"></ul>
+        </div>
+        
+        <!-- Results Section -->
+        <div id="results" class="hidden">
+            <!-- Tabs -->
+            <div class="bg-white rounded-lg shadow-md mb-4">
+                <div class="border-b border-gray-200">
+                    <nav class="flex -mb-px">
+                        <button 
+                            data-tab="missing_on_new"
+                            class="tab-button px-6 py-3 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:text-gray-700 hover:border-gray-300 focus:outline-none"
+                        >
+                            Missing on New 
+                            <span id="count-missing_on_new" class="ml-2 bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs"></span>
+                        </button>
+                        <button 
+                            data-tab="new_only"
+                            class="tab-button px-6 py-3 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:text-gray-700 hover:border-gray-300 focus:outline-none"
+                        >
+                            New Only 
+                            <span id="count-new_only" class="ml-2 bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs"></span>
+                        </button>
+                        <button 
+                            data-tab="matched"
+                            class="tab-button px-6 py-3 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:text-gray-700 hover:border-gray-300 focus:outline-none"
+                        >
+                            Matched 
+                            <span id="count-matched" class="ml-2 bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs"></span>
+                        </button>
+                    </nav>
+                </div>
+            </div>
+            
+            <!-- Export Button -->
+            <div class="mb-4 text-right">
+                <button 
+                    id="exportBtn"
+                    class="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition duration-150"
+                >
+                    Export CSV
+                </button>
+            </div>
+            
+            <!-- Table -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Full URL
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Path
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody" class="bg-white divide-y divide-gray-200">
+                        </tbody>
+                    </table>
+                </div>
+                <div id="emptyMessage" class="hidden text-center py-8 text-gray-500">
+                    No items in this category.
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let currentData = {};
+        let activeTab = 'missing_on_new';
+        
+        // Add progress message to log
+        function addProgressMessage(message) {
+            const progressContent = document.getElementById('progressContent');
+            const timestamp = new Date().toLocaleTimeString();
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'mb-1';
+            
+            // Color code based on message content
+            let textColor = 'text-green-400';
+            if (message.includes('⚠️') || message.includes('Timeout')) {
+                textColor = 'text-yellow-400';
+            } else if (message.includes('❌') || message.includes('Error')) {
+                textColor = 'text-red-400';
+            } else if (message.includes('✓') || message.includes('complete')) {
+                textColor = 'text-green-300';
+            }
+            
+            messageDiv.innerHTML = `<span class="text-xs text-gray-500">[${timestamp}]</span> <span class="${textColor}">${message}</span>`;
+            progressContent.appendChild(messageDiv);
+            
+            // Auto-scroll to bottom
+            const progressLog = document.getElementById('progressLog');
+            progressLog.scrollTop = progressLog.scrollHeight;
+        }
+        
+        // Clear log button
+        document.getElementById('clearLog').addEventListener('click', () => {
+            document.getElementById('progressContent').innerHTML = '';
+        });
+        
+        // Form submission
+        document.getElementById('compareForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const oldUrl = formData.get('old_url');
+            const newUrl = formData.get('new_url');
+            
+            // Show loading, hide results, error, and warning
+            document.getElementById('loading').classList.remove('hidden');
+            document.getElementById('progressLog').classList.remove('hidden');
+            document.getElementById('results').classList.add('hidden');
+            document.getElementById('error').classList.add('hidden');
+            document.getElementById('warning').classList.add('hidden');
+            
+            // Clear previous progress
+            document.getElementById('progressContent').innerHTML = '';
+            addProgressMessage('🚀 Starting comparison...');
+            
+            try {
+                // Use fetch with streaming for SSE
+                const response = await fetch('/compare', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let buffer = '';
+                
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    
+                    buffer += decoder.decode(value, { stream: true });
+                    const lines = buffer.split('\n');
+                    buffer = lines.pop() || ''; // Keep incomplete line in buffer
+                    
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            try {
+                                const data = JSON.parse(line.slice(6));
+                                
+                                if (data.type === 'progress') {
+                                    addProgressMessage(data.message);
+                                } else if (data.type === 'result') {
+                                    // Store data
+                                    currentData = data.data;
+                                    activeTab = 'missing_on_new';
+                                    
+                                    // Update counts
+                                    document.getElementById('count-missing_on_new').textContent = data.data.missing_on_new.length;
+                                    document.getElementById('count-new_only').textContent = data.data.new_only.length;
+                                    document.getElementById('count-matched').textContent = data.data.matched.length;
+                                    
+                                    // Show warnings if present
+                                    if (data.data.warnings && data.data.warnings.length > 0) {
+                                        document.getElementById('warningTitle').textContent = data.data.warning_message || 'Some sitemaps failed to load:';
+                                        const warningList = document.getElementById('warningList');
+                                        warningList.innerHTML = data.data.warnings.map(w => `<li>${w}</li>`).join('');
+                                        document.getElementById('warning').classList.remove('hidden');
+                                    }
+                                    
+                                    // Show results
+                                    document.getElementById('loading').classList.add('hidden');
+                                    document.getElementById('results').classList.remove('hidden');
+                                    addProgressMessage('✅ Comparison complete!');
+                                    
+                                    // Show initial tab
+                                    showTab('missing_on_new');
+                                } else if (data.type === 'error') {
+                                    throw new Error(data.message);
+                                }
+                            } catch (parseError) {
+                                console.error('Error parsing SSE data:', parseError, line);
+                            }
+                        }
+                    }
+                }
+                
+            } catch (error) {
+                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('errorMessage').textContent = error.message;
+                document.getElementById('error').classList.remove('hidden');
+                addProgressMessage(`❌ Error: ${error.message}`);
+            }
+        });
+        
+        // Tab switching
+        function showTab(tabName) {
+            activeTab = tabName;
+            
+            // Update tab buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                if (btn.dataset.tab === tabName) {
+                    btn.classList.add('border-blue-500', 'text-blue-600');
+                    btn.classList.remove('text-gray-500', 'border-transparent');
+                } else {
+                    btn.classList.remove('border-blue-500', 'text-blue-600');
+                    btn.classList.add('text-gray-500', 'border-transparent');
+                }
+            });
+            
+            // Update table
+            const urls = currentData[tabName] || [];
+            const tbody = document.getElementById('tableBody');
+            const emptyMessage = document.getElementById('emptyMessage');
+            
+            if (urls.length === 0) {
+                tbody.innerHTML = '';
+                emptyMessage.classList.remove('hidden');
+                document.getElementById('tableBody').parentElement.parentElement.classList.add('hidden');
+            } else {
+                emptyMessage.classList.add('hidden');
+                document.getElementById('tableBody').parentElement.parentElement.classList.remove('hidden');
+                
+                tbody.innerHTML = urls.map(url => {
+                    const path = new URL(url).pathname;
+                    return `
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                <a href="${url}" target="_blank" class="text-blue-600 hover:text-blue-800">
+                                    ${url}
+                                </a>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                ${path}
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+        }
+        
+        // Tab button clicks
+        document.querySelectorAll('.tab-button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                showTab(btn.dataset.tab);
+            });
+        });
+        
+        // Export button
+        document.getElementById('exportBtn').addEventListener('click', async () => {
+            const formData = new FormData();
+            formData.append('category', activeTab);
+            formData.append('missing_on_new', JSON.stringify(currentData.missing_on_new || []));
+            formData.append('new_only', JSON.stringify(currentData.new_only || []));
+            formData.append('matched', JSON.stringify(currentData.matched || []));
+            
+            try {
+                const response = await fetch('/export', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${activeTab}.csv`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            } catch (error) {
+                alert('Failed to export CSV: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>
+
