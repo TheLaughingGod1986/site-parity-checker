@@ -25,6 +25,12 @@ A FastAPI web application that compares two websites by analyzing their sitemaps
 
 1. Clone the repository:
 ```bash
+git clone https://github.com/FarloGroup/site-parity-checker.git
+cd site-parity-checker
+```
+
+Or from the personal repository:
+```bash
 git clone https://github.com/TheLaughingGod1986/site-parity-checker.git
 cd site-parity-checker
 ```
