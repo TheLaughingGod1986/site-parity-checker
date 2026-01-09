@@ -84,10 +84,11 @@ class SiteComparator:
         
         # Fetch sitemaps if needed
         if combine_methods or not use_crawl:
-            self._send_message("📥 Fetching sitemaps...")
+            self._send_message("📥 Fetching all sitemaps...")
             
-            old_sitemap_urls, old_errors = old_fetcher.fetch(old_sitemap, old_parsed.netloc)
-            new_sitemap_urls, new_errors = new_fetcher.fetch(new_sitemap, new_parsed.netloc)
+            # Use fetch_all to get URLs from all discovered sitemaps
+            old_sitemap_urls, old_errors = old_fetcher.fetch_all(old_url, old_parsed.netloc)
+            new_sitemap_urls, new_errors = new_fetcher.fetch_all(new_url, new_parsed.netloc)
             
             old_urls.update(old_sitemap_urls)
             new_urls.update(new_sitemap_urls)

@@ -19,5 +19,8 @@ lxml>=5.0.0
 # Data export
 pandas>=2.2.0
 
+# PDF generation
+reportlab>=4.0.0
+
 # JavaScript rendering (optional but recommended)
 playwright>=1.57.0

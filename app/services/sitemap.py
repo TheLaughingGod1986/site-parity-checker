@@ -10,6 +10,20 @@ from ..models.progress import ProgressTracker
 from ..config import EXCLUDED_EXTENSIONS
 
 
+# Common sitemap locations to try
+COMMON_SITEMAP_LOCATIONS = [
+    '/sitemap.xml',
+    '/sitemap_index.xml',
+    '/sitemap-index.xml',
+    '/sitemaps/sitemap.xml',
+    '/sitemap/sitemap.xml',
+    '/sitemap1.xml',
+    '/post-sitemap.xml',
+    '/page-sitemap.xml',
+    '/wp-sitemap.xml',
+]
+
+
 class SitemapFetcher:
     """Fetches and parses sitemaps."""
     
@@ -27,21 +41,35 @@ class SitemapFetcher:
         self._visited: Set[str] = set()
     
     def get_sitemap_url(self, base_url: str) -> str:
-        """Get sitemap URL, checking robots.txt first.
+        """Get primary sitemap URL, checking robots.txt first.
         
         Args:
             base_url: Base URL of the site
             
         Returns:
-            Sitemap URL
+            Primary sitemap URL
+        """
+        sitemaps = self.discover_sitemaps(base_url)
+        return sitemaps[0] if sitemaps else f"{self._get_base_domain(base_url)}/sitemap.xml"
+    
+    def discover_sitemaps(self, base_url: str) -> List[str]:
+        """Discover all available sitemaps for a site.
+        
+        Checks robots.txt for sitemap directives and tries common locations.
+        
+        Args:
+            base_url: Base URL of the site
+            
+        Returns:
+            List of discovered sitemap URLs
         """
         if base_url.endswith('/sitemap.xml'):
-            return base_url
+            return [base_url]
         
-        parsed = urlparse(base_url)
-        base_domain = f"{parsed.scheme}://{parsed.netloc}"
+        base_domain = self._get_base_domain(base_url)
+        sitemaps: List[str] = []
         
-        # Check robots.txt for sitemap directive
+        # 1. Check robots.txt for ALL sitemap directives
         try:
             robots_url = f"{base_domain}/robots.txt"
             response = requests.get(
@@ -54,13 +82,44 @@ class SitemapFetcher:
                     line = line.strip()
                     if line.lower().startswith('sitemap:'):
                         sitemap_url = line.split(':', 1)[1].strip()
-                        if sitemap_url:
-                            return sitemap_url
+                        if sitemap_url and sitemap_url not in sitemaps:
+                            sitemaps.append(sitemap_url)
+                
+                if sitemaps:
+                    self._send_message(f"📍 Found {len(sitemaps)} sitemap(s) in robots.txt")
         except Exception:
             pass
         
-        # Fall back to default location
-        return f"{base_domain}/sitemap.xml"
+        # 2. Try common sitemap locations if none found in robots.txt
+        if not sitemaps:
+            self._send_message("🔍 Searching for sitemaps in common locations...")
+            for location in COMMON_SITEMAP_LOCATIONS:
+                sitemap_url = f"{base_domain}{location}"
+                try:
+                    response = requests.head(
+                        sitemap_url, 
+                        timeout=3, 
+                        headers={'User-Agent': 'Mozilla/5.0'},
+                        allow_redirects=True
+                    )
+                    if response.status_code == 200:
+                        content_type = response.headers.get('Content-Type', '').lower()
+                        if 'xml' in content_type or 'text' in content_type:
+                            sitemaps.append(sitemap_url)
+                            self._send_message(f"   ✓ Found: {location}")
+                except Exception:
+                    continue
+        
+        # 3. Fall back to default location if nothing found
+        if not sitemaps:
+            sitemaps.append(f"{base_domain}/sitemap.xml")
+        
+        return sitemaps
+    
+    def _get_base_domain(self, url: str) -> str:
+        """Extract base domain from URL."""
+        parsed = urlparse(url)
+        return f"{parsed.scheme}://{parsed.netloc}"
     
     def fetch(self, 
               url: str, 
@@ -75,6 +134,32 @@ class SitemapFetcher:
             Tuple of (urls_set, errors_list)
         """
         return self._fetch_recursive(url, expected_domain)
+    
+    def fetch_all(self, 
+                  base_url: str,
+                  expected_domain: Optional[str] = None) -> Tuple[Set[str], List[str]]:
+        """Fetch all discovered sitemaps and extract URLs.
+        
+        Args:
+            base_url: Base URL of the site
+            expected_domain: Expected domain for URL mapping
+            
+        Returns:
+            Tuple of (urls_set, errors_list)
+        """
+        sitemaps = self.discover_sitemaps(base_url)
+        all_urls: Set[str] = set()
+        all_errors: List[str] = []
+        
+        for sitemap_url in sitemaps:
+            urls, errors = self._fetch_recursive(sitemap_url, expected_domain)
+            all_urls.update(urls)
+            all_errors.extend(errors)
+        
+        if len(sitemaps) > 1:
+            self._send_message(f"✓ Total: {len(all_urls)} URLs from {len(sitemaps)} sitemaps")
+        
+        return all_urls, all_errors
     
     def _fetch_recursive(self, 
                          url: str, 
