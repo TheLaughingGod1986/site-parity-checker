@@ -8,6 +8,7 @@ from .url_utils import URLNormalizer, get_base_domain
 from .sitemap import SitemapFetcher
 from .crawler import WebCrawler
 from .async_crawler import AsyncWebCrawler
+from .verifier import URLVerifier
 from ..models.progress import ProgressTracker
 from ..models.comparison import ComparisonResult
 from ..config import CrawlConfig, DEFAULT_CRAWL_CONFIG
@@ -33,7 +34,8 @@ class SiteComparator:
                 new_url: str,
                 use_crawl: bool = False,
                 combine_methods: bool = False,
-                ignore_robots: bool = False) -> ComparisonResult:
+                ignore_robots: bool = False,
+                verify_results: bool = True) -> ComparisonResult:
         """Compare two sites and return differences.
         
         Args:
@@ -42,10 +44,15 @@ class SiteComparator:
             use_crawl: If True, crawl instead of using sitemap
             combine_methods: If True, use both sitemap AND crawl
             ignore_robots: If True, ignore robots.txt
+            verify_results: If True, verify missing/new URLs actually exist
             
         Returns:
             ComparisonResult with differences
         """
+        # Store base URLs for verification
+        self._old_base_url = old_url
+        self._new_base_url = new_url
+        self._verify_results = verify_results
         # Parse URLs
         old_parsed = urlparse(old_url)
         new_parsed = urlparse(new_url)
@@ -280,6 +287,63 @@ class SiteComparator:
             self._send_message(f"  📋 Sample of 'New Only' URLs (first 10):")
             for url in list(new_only)[:10]:
                 self._send_message(f"     - {URLNormalizer.get_path(url)}")
+        
+        # Verify results if enabled
+        if getattr(self, '_verify_results', True) and (missing_on_new or new_only):
+            self._send_message("")
+            self._send_message("🔍 Verifying results (checking if URLs actually exist)...")
+            
+            verifier = URLVerifier(
+                config=self.config,
+                progress=self.progress,
+                concurrency=20
+            )
+            
+            try:
+                # Run async verification
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+                try:
+                    verification = loop.run_until_complete(
+                        verifier.verify_comparison(
+                            old_base_url=getattr(self, '_old_base_url', ''),
+                            new_base_url=getattr(self, '_new_base_url', ''),
+                            missing_on_new=missing_on_new,
+                            new_only=new_only
+                        )
+                    )
+                finally:
+                    loop.close()
+                
+                # Update lists with verified results
+                false_positive_count = len(verification.false_positives) + len(verification.false_new)
+                if false_positive_count > 0:
+                    self._send_message(f"✓ Corrected {false_positive_count} false positives!")
+                    
+                    # Add false positives to matched
+                    for url in verification.false_positives:
+                        path = URLNormalizer.get_path(url)
+                        if path:
+                            matched.append(url)
+                    
+                    for url in verification.false_new:
+                        path = URLNormalizer.get_path(url)
+                        if path:
+                            matched.append(url)
+                    
+                    # Update the lists
+                    missing_on_new = verification.verified_missing
+                    new_only = verification.verified_new
+                    
+                    self._send_message(f"  Final counts after verification:")
+                    self._send_message(f"    - Missing on new: {len(missing_on_new)}")
+                    self._send_message(f"    - New only: {len(new_only)}")
+                    self._send_message(f"    - Matched: {len(matched)}")
+                else:
+                    self._send_message("✓ All results verified - no false positives found")
+                    
+            except Exception as e:
+                self._send_message(f"⚠️ Verification failed: {str(e)}")
         
         # Final progress update - mark as complete
         if self.progress:
