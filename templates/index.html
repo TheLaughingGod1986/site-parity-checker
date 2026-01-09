@@ -14,106 +14,72 @@
         <div class="bg-white rounded-lg shadow-md p-6 mb-8">
             <form id="compareForm" class="space-y-4">
                 <div>
-                    <label for="old_url" class="block text-sm font-medium text-gray-700 mb-2">
-                        Old Site URL
-                    </label>
-                    <input 
-                        type="url" 
-                        id="old_url" 
-                        name="old_url" 
-                        required
-                        placeholder="https://oldsite.com"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    >
+                    <label for="old_url" class="block text-sm font-medium text-gray-700 mb-2">Old Site URL</label>
+                    <input type="url" id="old_url" name="old_url" required placeholder="https://oldsite.com"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                 </div>
                 
                 <div>
-                    <label for="new_url" class="block text-sm font-medium text-gray-700 mb-2">
-                        New Site URL
-                    </label>
-                    <input 
-                        type="url" 
-                        id="new_url" 
-                        name="new_url" 
-                        required
-                        placeholder="https://newsite.com"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    >
+                    <label for="new_url" class="block text-sm font-medium text-gray-700 mb-2">New Site URL</label>
+                    <input type="url" id="new_url" name="new_url" required placeholder="https://newsite.com"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                 </div>
                 
                 <!-- Crawl Options -->
                 <div class="border-t border-gray-200 pt-4 mt-4">
                     <div class="flex items-center mb-4">
-                        <input 
-                            type="checkbox" 
-                            id="use_crawl" 
-                            name="use_crawl"
-                            value="true"
-                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                        >
+                        <input type="checkbox" id="use_crawl" name="use_crawl" value="true"
+                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
                         <label for="use_crawl" class="ml-2 block text-sm text-gray-700">
                             <span class="font-medium">Crawl site instead of using sitemap</span>
-                            <span class="text-xs text-gray-500 block mt-1">
-                                Discover all pages by crawling links (slower but more thorough)
-                            </span>
+                            <span class="text-xs text-gray-500 block mt-1">Discover all pages by crawling links (slower but more thorough)</span>
                         </label>
                     </div>
                     
                     <div id="crawlOptions" class="hidden ml-6">
-                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
-                            <p class="text-sm text-blue-800">
-                                <strong>Max Pages:</strong> 10,000 pages per site (automatically set for comprehensive crawling)
-                            </p>
+                        <div class="flex items-center gap-4 mb-4">
+                            <label for="max_pages" class="text-sm font-medium text-gray-700">Max pages per site:</label>
+                            <select id="max_pages" name="max_pages" class="px-3 py-1 border border-gray-300 rounded-md text-sm">
+                                <option value="100">100 (quick test)</option>
+                                <option value="500">500 (fast)</option>
+                                <option value="1000">1,000 (standard)</option>
+                                <option value="3000" selected>3,000 (thorough)</option>
+                                <option value="10000">10,000 (comprehensive)</option>
+                            </select>
                         </div>
-                        <input 
-                            type="hidden" 
-                            id="max_pages" 
-                            name="max_pages" 
-                            value="10000"
-                        >
                     </div>
                     
                     <div class="flex items-center mt-4">
-                        <input 
-                            type="checkbox" 
-                            id="combine_methods" 
-                            name="combine_methods"
-                            value="true"
-                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                        >
+                        <input type="checkbox" id="combine_methods" name="combine_methods" value="true"
+                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
                         <label for="combine_methods" class="ml-2 block text-sm text-gray-700">
                             <span class="font-medium">Use both sitemap and crawling (most comprehensive)</span>
-                            <span class="text-xs text-gray-500 block mt-1">
-                                Combines sitemap URLs with crawled URLs for maximum coverage
-                            </span>
+                            <span class="text-xs text-gray-500 block mt-1">Combines sitemap URLs with crawled URLs for maximum coverage</span>
                         </label>
                     </div>
                     
                     <div id="ignoreRobotsOption" class="hidden ml-6 mt-2">
                         <div class="flex items-center">
-                            <input 
-                                type="checkbox" 
-                                id="ignore_robots" 
-                                name="ignore_robots"
-                                value="true"
-                                class="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
-                            >
+                            <input type="checkbox" id="ignore_robots" name="ignore_robots" value="true"
+                                class="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded">
                             <label for="ignore_robots" class="ml-2 block text-sm text-gray-700">
                                 <span class="font-medium">Ignore robots.txt (for comparison purposes)</span>
-                                <span class="text-xs text-amber-600 block mt-1">
-                                    ⚠️ Allows crawling even if robots.txt blocks access. Use when sitemaps are incomplete.
-                                </span>
+                                <span class="text-xs text-amber-600 block mt-1">⚠️ Allows crawling even if robots.txt blocks access</span>
                             </label>
                         </div>
                     </div>
                 </div>
                 
-                <button 
-                    type="submit"
-                    class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150"
-                >
-                    Compare Sites
-                </button>
+                <div class="flex gap-4">
+                    <button type="submit" id="submitBtn"
+                        class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150">
+                        Compare Sites
+                    </button>
+                    <button type="button" id="cancelBtn"
+                        class="hidden px-6 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition duration-150">
+                        ✕ Cancel
+                    </button>
+                </div>
             </form>
         </div>
         
@@ -144,7 +110,6 @@
             
             <!-- Scan Status Cards -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                <!-- Old Site Scan Status -->
                 <div class="bg-blue-50 rounded-lg p-4 border-2 border-blue-200">
                     <div class="flex items-center justify-between mb-2">
                         <span class="text-sm font-semibold text-gray-700">Old Site Scan Status</span>
@@ -160,7 +125,6 @@
                     <div id="oldSiteProgressText" class="text-xs text-gray-500 mt-1">0% Complete</div>
                 </div>
                 
-                <!-- New Site Scan Status -->
                 <div class="bg-indigo-50 rounded-lg p-4 border-2 border-indigo-200">
                     <div class="flex items-center justify-between mb-2">
                         <span class="text-sm font-semibold text-gray-700">New Site Scan Status</span>
@@ -188,15 +152,14 @@
                     <div class="ml-3">
                         <h4 class="text-sm font-semibold text-amber-800 mb-1">⚠️ Preliminary Comparison</h4>
                         <p class="text-sm text-amber-700" id="comparisonStatusText">
-                            Comparison results are only accurate once <strong>both sites are 100% scanned</strong>. 
-                            The "Missing on New" count will decrease as the new site is scanned and matches are found.
+                            Comparison results are only accurate once <strong>both sites are 100% scanned</strong>.
                         </p>
                     </div>
                 </div>
             </div>
             
+            <!-- Stats Grid -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <!-- Pages Scanned -->
                 <div class="bg-blue-50 rounded-lg p-4">
                     <div class="text-sm text-gray-600 mb-1">Pages Scanned</div>
                     <div class="text-2xl font-bold text-blue-600">
@@ -205,21 +168,18 @@
                     <div class="text-xs text-gray-500 mt-1">Old / New</div>
                 </div>
                 
-                <!-- Time Elapsed -->
                 <div class="bg-green-50 rounded-lg p-4">
                     <div class="text-sm text-gray-600 mb-1">Time Elapsed</div>
                     <div class="text-2xl font-bold text-green-600" id="statsElapsedTime">0:00</div>
                     <div class="text-xs text-gray-500 mt-1">MM:SS</div>
                 </div>
                 
-                <!-- ETA -->
                 <div class="bg-purple-50 rounded-lg p-4">
                     <div class="text-sm text-gray-600 mb-1">Estimated Time</div>
                     <div class="text-2xl font-bold text-purple-600" id="statsETA">--</div>
                     <div class="text-xs text-gray-500 mt-1">Remaining</div>
                 </div>
                 
-                <!-- Match Percentage -->
                 <div class="bg-yellow-50 rounded-lg p-4">
                     <div class="text-sm text-gray-600 mb-1">Match Rate</div>
                     <div class="text-2xl font-bold text-yellow-600" id="statsMatchPercent">0%</div>
@@ -229,21 +189,19 @@
             
             <!-- Missing/New Counts -->
             <div class="grid grid-cols-2 gap-4 mt-4">
-                <div class="bg-red-50 rounded-lg p-4 relative" id="missingCountCard" title="URLs that exist on the old site but were NOT found on the new site. These pages may have been removed, moved, or not yet migrated.">
+                <div class="bg-red-50 rounded-lg p-4 relative" title="URLs on old site not found on new site">
                     <div class="text-sm text-gray-600 mb-1">Missing on New</div>
                     <div class="text-2xl font-bold text-red-600" id="statsMissingCount">0</div>
                     <div class="text-xs text-gray-500 mt-1">URLs from old site not found on new</div>
-                    <div class="text-xs text-gray-400 mt-1 italic">May be removed or not migrated</div>
                     <div id="missingCountPreliminary" class="absolute top-2 right-2">
                         <span class="text-xs bg-amber-200 text-amber-800 px-2 py-1 rounded-full">Preliminary</span>
                     </div>
                 </div>
                 
-                <div class="bg-indigo-50 rounded-lg p-4" title="URLs that exist on the new site but were NOT found on the old site. These are new pages that didn't exist before.">
+                <div class="bg-indigo-50 rounded-lg p-4" title="URLs only on new site">
                     <div class="text-sm text-gray-600 mb-1">New Only</div>
                     <div class="text-2xl font-bold text-indigo-600" id="statsNewOnlyCount">0</div>
                     <div class="text-xs text-gray-500 mt-1">URLs only on new site</div>
-                    <div class="text-xs text-gray-400 mt-1 italic">New pages that didn't exist before</div>
                 </div>
             </div>
         </div>
@@ -254,8 +212,7 @@
                 <span class="text-white font-semibold">Progress Log</span>
                 <button id="clearLog" class="text-gray-400 hover:text-white text-xs">Clear</button>
             </div>
-            <div id="progressContent" class="space-y-1">
-            </div>
+            <div id="progressContent" class="space-y-1"></div>
         </div>
         
         <!-- Error Message -->
@@ -275,7 +232,6 @@
             <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg shadow-md p-6 mb-6 border border-blue-200">
                 <h3 class="text-xl font-bold text-gray-800 mb-4">📊 Comparison Summary</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <!-- Old Site Summary -->
                     <div class="bg-white rounded-lg p-4 border-2 border-blue-300">
                         <div class="flex items-center justify-between mb-2">
                             <span class="text-sm font-medium text-gray-600">Old Site</span>
@@ -286,7 +242,6 @@
                         <div id="summaryOldNote" class="text-xs text-gray-400 mt-2 italic"></div>
                     </div>
                     
-                    <!-- New Site Summary -->
                     <div class="bg-white rounded-lg p-4 border-2 border-indigo-300">
                         <div class="flex items-center justify-between mb-2">
                             <span class="text-sm font-medium text-gray-600">New Site</span>
@@ -298,7 +253,6 @@
                     </div>
                 </div>
                 
-                <!-- Comparison Note -->
                 <div id="summaryComparisonNote" class="hidden bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4">
                     <p class="text-sm text-amber-800" id="summaryComparisonText"></p>
                 </div>
@@ -309,24 +263,15 @@
                     <div class="space-y-3 text-sm">
                         <div class="flex items-start">
                             <span class="text-red-600 font-bold mr-2">•</span>
-                            <div>
-                                <span class="font-semibold text-gray-800">Missing on New:</span>
-                                <span class="text-gray-600"> URLs that exist on the old site but were NOT found on the new site. These pages may have been removed, moved, or not yet migrated.</span>
-                            </div>
+                            <div><span class="font-semibold text-gray-800">Missing on New:</span> <span class="text-gray-600">URLs on old site not found on new site.</span></div>
                         </div>
                         <div class="flex items-start">
                             <span class="text-indigo-600 font-bold mr-2">•</span>
-                            <div>
-                                <span class="font-semibold text-gray-800">New Only:</span>
-                                <span class="text-gray-600"> URLs that exist on the new site but were NOT found on the old site. These are new pages that didn't exist before.</span>
-                            </div>
+                            <div><span class="font-semibold text-gray-800">New Only:</span> <span class="text-gray-600">URLs only on new site (new pages).</span></div>
                         </div>
                         <div class="flex items-start">
                             <span class="text-green-600 font-bold mr-2">•</span>
-                            <div>
-                                <span class="font-semibold text-gray-800">Matched:</span>
-                                <span class="text-gray-600"> URLs that exist on BOTH sites. These pages successfully migrated or already existed on both sites.</span>
-                            </div>
+                            <div><span class="font-semibold text-gray-800">Matched:</span> <span class="text-gray-600">URLs on both sites.</span></div>
                         </div>
                     </div>
                 </div>
@@ -336,26 +281,14 @@
             <div class="bg-white rounded-lg shadow-md mb-4">
                 <div class="border-b border-gray-200">
                     <nav class="flex -mb-px">
-                        <button 
-                            data-tab="missing_on_new"
-                            class="tab-button px-6 py-3 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:text-gray-700 hover:border-gray-300 focus:outline-none"
-                        >
-                            Missing on New 
-                            <span id="count-missing_on_new" class="ml-2 bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs"></span>
+                        <button data-tab="missing_on_new" class="tab-button px-6 py-3 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:text-gray-700 hover:border-gray-300 focus:outline-none">
+                            Missing on New <span id="count-missing_on_new" class="ml-2 bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs"></span>
                         </button>
-                        <button 
-                            data-tab="new_only"
-                            class="tab-button px-6 py-3 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:text-gray-700 hover:border-gray-300 focus:outline-none"
-                        >
-                            New Only 
-                            <span id="count-new_only" class="ml-2 bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs"></span>
+                        <button data-tab="new_only" class="tab-button px-6 py-3 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:text-gray-700 hover:border-gray-300 focus:outline-none">
+                            New Only <span id="count-new_only" class="ml-2 bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs"></span>
                         </button>
-                        <button 
-                            data-tab="matched"
-                            class="tab-button px-6 py-3 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:text-gray-700 hover:border-gray-300 focus:outline-none"
-                        >
-                            Matched 
-                            <span id="count-matched" class="ml-2 bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs"></span>
+                        <button data-tab="matched" class="tab-button px-6 py-3 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:text-gray-700 hover:border-gray-300 focus:outline-none">
+                            Matched <span id="count-matched" class="ml-2 bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs"></span>
                         </button>
                     </nav>
                 </div>
@@ -363,16 +296,10 @@
             
             <!-- Export Buttons -->
             <div class="mb-4 flex justify-end gap-3">
-                <button 
-                    id="exportBtn"
-                    class="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition duration-150"
-                >
+                <button id="exportBtn" class="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition duration-150">
                     Export Current Tab
                 </button>
-                <button 
-                    id="exportAllBtn"
-                    class="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150"
-                >
+                <button id="exportAllBtn" class="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150">
                     Export All (Missing + New Only)
                 </button>
             </div>
@@ -383,600 +310,18 @@
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Full URL
-                                </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Path
-                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Full URL</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Path</th>
                             </tr>
                         </thead>
-                        <tbody id="tableBody" class="bg-white divide-y divide-gray-200">
-                        </tbody>
+                        <tbody id="tableBody" class="bg-white divide-y divide-gray-200"></tbody>
                     </table>
                 </div>
-                <div id="emptyMessage" class="hidden text-center py-8 text-gray-500">
-                    No items in this category.
-                </div>
+                <div id="emptyMessage" class="hidden text-center py-8 text-gray-500">No items in this category.</div>
             </div>
         </div>
     </div>
     
-    <script>
-        // Wait for DOM to be ready
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM loaded, initializing...');
-            
-            let currentData = {};
-            let activeTab = 'missing_on_new';
-            
-            // Toggle crawl options visibility
-            const useCrawlCheckbox = document.getElementById('use_crawl');
-            if (useCrawlCheckbox) {
-                useCrawlCheckbox.addEventListener('change', (e) => {
-                    const crawlOptions = document.getElementById('crawlOptions');
-                    const ignoreRobotsOption = document.getElementById('ignoreRobotsOption');
-                    if (crawlOptions) {
-                        if (e.target.checked) {
-                            crawlOptions.classList.remove('hidden');
-                            if (ignoreRobotsOption) {
-                                ignoreRobotsOption.classList.remove('hidden');
-                            }
-                        } else {
-                            crawlOptions.classList.add('hidden');
-                            if (ignoreRobotsOption) {
-                                ignoreRobotsOption.classList.add('hidden');
-                            }
-                        }
-                    }
-                });
-            }
-        
-        // Add progress message to log
-        function addProgressMessage(message) {
-            const progressContent = document.getElementById('progressContent');
-            const timestamp = new Date().toLocaleTimeString();
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'mb-1';
-            
-            // Color code based on message content
-            let textColor = 'text-green-400';
-            if (message.includes('⚠️') || message.includes('Timeout')) {
-                textColor = 'text-yellow-400';
-            } else if (message.includes('❌') || message.includes('Error')) {
-                textColor = 'text-red-400';
-            } else if (message.includes('✓') || message.includes('complete')) {
-                textColor = 'text-green-300';
-            }
-            
-            messageDiv.innerHTML = `<span class="text-xs text-gray-500">[${timestamp}]</span> <span class="${textColor}">${message}</span>`;
-            progressContent.appendChild(messageDiv);
-            
-            // Auto-scroll to bottom
-            const progressLog = document.getElementById('progressLog');
-            progressLog.scrollTop = progressLog.scrollHeight;
-        }
-        
-        // Clear log button
-        document.getElementById('clearLog').addEventListener('click', () => {
-            document.getElementById('progressContent').innerHTML = '';
-        });
-        
-        // Helper function to format seconds as MM:SS or HH:MM:SS
-        function formatTime(seconds) {
-            if (seconds === null || seconds === undefined) return '--';
-            const hours = Math.floor(seconds / 3600);
-            const minutes = Math.floor((seconds % 3600) / 60);
-            const secs = Math.floor(seconds % 60);
-            
-            if (hours > 0) {
-                return `${hours}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-            } else {
-                return `${minutes}:${String(secs).padStart(2, '0')}`;
-            }
-        }
-        
-        // Helper function to format ETA
-        function formatETA(etaSeconds) {
-            if (etaSeconds === null || etaSeconds === undefined || etaSeconds <= 0) return '--';
-            if (etaSeconds < 60) {
-                return `${Math.round(etaSeconds)}s`;
-            } else if (etaSeconds < 3600) {
-                return `${Math.round(etaSeconds / 60)}m`;
-            } else {
-                const hours = Math.floor(etaSeconds / 3600);
-                const minutes = Math.round((etaSeconds % 3600) / 60);
-                return `${hours}h ${minutes}m`;
-            }
-        }
-        
-        // Update progress UI with structured data
-        function updateProgressUI(progressData) {
-            if (!progressData) return;
-            
-            // Update progress bar
-            const percentage = progressData.percentage || 0;
-            document.getElementById('progressBarFill').style.width = `${percentage}%`;
-            document.getElementById('progressPercentage').textContent = `${percentage.toFixed(1)}%`;
-            
-            // Update pages scanned
-            const oldPages = progressData.old_site?.pages_scanned || 0;
-            const newPages = progressData.new_site?.pages_scanned || 0;
-            const totalPages = oldPages + newPages;
-            // Use max_pages (10000) as default if total_estimate is not set or is 0
-            const oldTotalEstimate = progressData.old_site?.total_estimate > 0 ? progressData.old_site.total_estimate : 10000;
-            const newTotalEstimate = progressData.new_site?.total_estimate > 0 ? progressData.new_site.total_estimate : 10000;
-            const totalEstimate = Math.max(oldTotalEstimate, newTotalEstimate, totalPages);
-            document.getElementById('progressPages').textContent = `${totalPages} / ${totalEstimate}`;
-            document.getElementById('statsOldPages').textContent = oldPages;
-            document.getElementById('statsNewPages').textContent = newPages;
-            
-            // Calculate percentages (declare at function scope so they're available for comparison warning)
-            const oldPercent = oldTotalEstimate > 0 ? (oldPages / oldTotalEstimate * 100) : 0;
-            const newPercent = newTotalEstimate > 0 ? (newPages / newTotalEstimate * 100) : 0;
-            
-            // Update scan status cards (with null checks for safety)
-            const oldSitePagesScannedEl = document.getElementById('oldSitePagesScanned');
-            const oldSiteTotalEstimateEl = document.getElementById('oldSiteTotalEstimate');
-            const oldSiteProgressBarEl = document.getElementById('oldSiteProgressBar');
-            const oldSiteProgressTextEl = document.getElementById('oldSiteProgressText');
-            const oldStatusBadge = document.getElementById('oldSiteStatusBadge');
-            
-            if (oldSitePagesScannedEl && oldSiteTotalEstimateEl && oldSiteProgressBarEl && oldSiteProgressTextEl) {
-                oldSitePagesScannedEl.textContent = oldPages;
-                oldSiteTotalEstimateEl.textContent = oldTotalEstimate;
-                oldSiteProgressBarEl.style.width = `${Math.min(oldPercent, 100)}%`;
-                oldSiteProgressTextEl.textContent = `${oldPercent.toFixed(1)}% Complete`;
-                
-                // Update old site status badge
-                if (oldStatusBadge) {
-                    if (oldPercent >= 100) {
-                        oldStatusBadge.textContent = 'Complete';
-                        oldStatusBadge.className = 'text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full';
-                    } else if (oldPages > 0) {
-                        oldStatusBadge.textContent = 'Scanning...';
-                        oldStatusBadge.className = 'text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full';
-                    } else {
-                        oldStatusBadge.textContent = 'Waiting...';
-                        oldStatusBadge.className = 'text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full';
-                    }
-                }
-            }
-            
-            const newSitePagesScannedEl = document.getElementById('newSitePagesScanned');
-            const newSiteTotalEstimateEl = document.getElementById('newSiteTotalEstimate');
-            const newSiteProgressBarEl = document.getElementById('newSiteProgressBar');
-            const newSiteProgressTextEl = document.getElementById('newSiteProgressText');
-            const newStatusBadge = document.getElementById('newSiteStatusBadge');
-            
-            if (newSitePagesScannedEl && newSiteTotalEstimateEl && newSiteProgressBarEl && newSiteProgressTextEl) {
-                newSitePagesScannedEl.textContent = newPages;
-                newSiteTotalEstimateEl.textContent = newTotalEstimate;
-                newSiteProgressBarEl.style.width = `${Math.min(newPercent, 100)}%`;
-                newSiteProgressTextEl.textContent = `${newPercent.toFixed(1)}% Complete`;
-                
-                // Update new site status badge
-                if (newStatusBadge) {
-                    if (newPercent >= 100) {
-                        newStatusBadge.textContent = 'Complete';
-                        newStatusBadge.className = 'text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full';
-                    } else if (newPages > 0) {
-                        newStatusBadge.textContent = 'Scanning...';
-                        newStatusBadge.className = 'text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full';
-                    } else {
-                        newStatusBadge.textContent = 'Waiting...';
-                        newStatusBadge.className = 'text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full';
-                    }
-                }
-            }
-            
-            // Update comparison status warning
-            const bothComplete = oldPercent >= 100 && newPercent >= 100;
-            const comparisonWarning = document.getElementById('comparisonStatusWarning');
-            const comparisonText = document.getElementById('comparisonStatusText');
-            const missingPreliminary = document.getElementById('missingCountPreliminary');
-            
-            if (bothComplete) {
-                comparisonWarning.className = 'bg-green-50 border-2 border-green-300 rounded-lg p-4 mb-4';
-                comparisonText.innerHTML = '<strong>✅ Comparison Complete!</strong> Both sites are 100% scanned. The results below are now accurate.';
-                if (missingPreliminary) missingPreliminary.style.display = 'none';
-            } else if (newPages === 0) {
-                comparisonText.innerHTML = 'Comparison results are only accurate once <strong>both sites are 100% scanned</strong>. ' +
-                    'The new site hasn\'t started scanning yet - the "Missing on New" count will be accurate once it begins.';
-                if (missingPreliminary) missingPreliminary.style.display = 'block';
-            } else {
-                comparisonText.innerHTML = 'Comparison results are only accurate once <strong>both sites are 100% scanned</strong>. ' +
-                    'The "Missing on New" count will decrease as the new site is scanned and matches are found.';
-                if (missingPreliminary) missingPreliminary.style.display = 'block';
-            }
-            
-            // Update time (always update, even if 0)
-            const elapsed = progressData.time?.elapsed_seconds ?? 0;
-            if (elapsed > 0 || oldPages > 0 || newPages > 0) {
-                document.getElementById('statsElapsedTime').textContent = formatTime(elapsed);
-            }
-            
-            // Update ETA
-            const eta = progressData.time?.eta_seconds;
-            if (eta !== null && eta !== undefined) {
-                document.getElementById('statsETA').textContent = formatETA(eta);
-            }
-            
-            // Update comparison stats
-            const comparison = progressData.comparison || {};
-            document.getElementById('statsMatchPercent').textContent = `${(comparison.match_percentage || 0).toFixed(1)}%`;
-            document.getElementById('statsMissingCount').textContent = comparison.missing_count || 0;
-            document.getElementById('statsNewOnlyCount').textContent = comparison.new_only_count || 0;
-            
-            // Show warning if limit was reached
-            if (progressData.limit_reached && progressData.remaining_queue > 0) {
-                const warningDiv = document.getElementById('warning');
-                const warningTitle = document.getElementById('warningTitle');
-                const warningList = document.getElementById('warningList');
-                
-                warningTitle.textContent = '⚠️ Page Limit Reached!';
-                warningList.innerHTML = `
-                    <li>The crawl stopped at the maximum page limit (${totalEstimate} pages)</li>
-                    <li>There are still <strong>${progressData.remaining_queue}</strong> URLs in the queue that were not crawled</li>
-                    <li>Some pages may be missing from the comparison results</li>
-                    <li><strong>Solution:</strong> Increase the "Max Pages to Crawl" value above ${totalEstimate} and run the comparison again</li>
-                `;
-                warningDiv.classList.remove('hidden');
-            }
-        }
-        
-        // Form submission
-        const compareForm = document.getElementById('compareForm');
-        if (!compareForm) {
-            console.error('Form element not found!');
-            return;
-        }
-        
-        console.log('Form element found, adding submit listener');
-        compareForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            console.log('Form submitted');
-            
-            try {
-                const formData = new FormData(e.target);
-                const oldUrl = formData.get('old_url');
-                const newUrl = formData.get('new_url');
-                
-                console.log('Old URL:', oldUrl);
-                console.log('New URL:', newUrl);
-                
-                // Add crawl options if enabled
-                const useCrawlCheckbox = document.getElementById('use_crawl');
-                const useCrawl = useCrawlCheckbox ? useCrawlCheckbox.checked : false;
-                console.log('Use crawl:', useCrawl);
-                
-                if (useCrawl) {
-                    formData.append('use_crawl', 'true');
-                    // Max pages is now fixed at 10,000 (hidden input)
-                    formData.append('max_pages', '10000');
-                    console.log('Max pages: 10000 (fixed)');
-                } else {
-                    formData.append('use_crawl', 'false');
-                    formData.append('max_pages', '10000'); // Default value (fixed at 10,000)
-                }
-                
-                // Get combine methods option
-                const combineMethodsCheckbox = document.getElementById('combine_methods');
-                const combineMethods = combineMethodsCheckbox ? combineMethodsCheckbox.checked : false;
-                if (combineMethods) {
-                    formData.append('combine_methods', 'true');
-                } else {
-                    formData.append('combine_methods', 'false');
-                }
-                
-                // Show loading, hide results, error, and warning
-                document.getElementById('loading').classList.remove('hidden');
-                document.getElementById('progressBarContainer').classList.remove('hidden');
-                document.getElementById('statsPanel').classList.remove('hidden');
-                document.getElementById('progressLog').classList.remove('hidden');
-                document.getElementById('results').classList.add('hidden');
-                document.getElementById('error').classList.add('hidden');
-                document.getElementById('warning').classList.add('hidden');
-                
-                // Update loading text based on method
-                const methodText = combineMethods ? 'Sitemap + Crawling' : (useCrawl ? 'Crawling sites...' : 'Analyzing sitemaps...');
-                document.getElementById('loadingText').textContent = methodText;
-                
-                // Reset progress UI
-                document.getElementById('progressBarFill').style.width = '0%';
-                document.getElementById('progressPercentage').textContent = '0%';
-                document.getElementById('progressPages').textContent = '0 / 0';
-                document.getElementById('statsOldPages').textContent = '0';
-                document.getElementById('statsNewPages').textContent = '0';
-                document.getElementById('statsElapsedTime').textContent = '0:00';
-                document.getElementById('statsETA').textContent = '--';
-                document.getElementById('statsMatchPercent').textContent = '0%';
-                document.getElementById('statsMissingCount').textContent = '0';
-                document.getElementById('statsNewOnlyCount').textContent = '0';
-                
-                // Clear previous progress and warnings
-                document.getElementById('progressContent').innerHTML = '';
-                document.getElementById('warning').classList.add('hidden');
-                addProgressMessage('🚀 Starting comparison...');
-                
-                console.log('Sending request to /compare');
-                
-                // Use fetch with streaming for SSE
-                const response = await fetch('/compare', {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                console.log('Response received:', response.status, response.statusText);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const reader = response.body.getReader();
-                const decoder = new TextDecoder();
-                let buffer = '';
-                
-                while (true) {
-                    const { done, value } = await reader.read();
-                    if (done) break;
-                    
-                    buffer += decoder.decode(value, { stream: true });
-                    const lines = buffer.split('\n');
-                    buffer = lines.pop() || ''; // Keep incomplete line in buffer
-                    
-                    for (const line of lines) {
-                        if (line.startsWith('data: ')) {
-                            try {
-                                const data = JSON.parse(line.slice(6));
-                                
-                                if (data.type === 'progress' && data.data) {
-                                    // Structured progress data
-                                    updateProgressUI(data.data);
-                                } else if (data.type === 'progress' && data.message) {
-                                    // Legacy string message
-                                    addProgressMessage(data.message);
-                                } else if (data.type === 'message') {
-                                    // New structured message format
-                                    addProgressMessage(data.message);
-                                } else if (data.type === 'result') {
-                                    // Store data
-                                    currentData = data.data;
-                                    activeTab = 'missing_on_new';
-                                    
-                                    // Update counts
-                                    document.getElementById('count-missing_on_new').textContent = data.data.missing_on_new.length;
-                                    document.getElementById('count-new_only').textContent = data.data.new_only.length;
-                                    document.getElementById('count-matched').textContent = data.data.matched.length;
-                                    
-                                    // Update summary totals
-                                    // Use totals from backend if available, otherwise calculate
-                                    const oldTotal = data.data.old_total || (data.data.missing_on_new.length + data.data.matched.length);
-                                    const newTotal = data.data.new_total || (data.data.new_only.length + data.data.matched.length);
-                                    document.getElementById('summaryOldTotal').textContent = oldTotal.toLocaleString();
-                                    document.getElementById('summaryNewTotal').textContent = newTotal.toLocaleString();
-                                    
-                                    // Add comparison notes
-                                    const diff = oldTotal - newTotal;
-                                    const diffPercent = oldTotal > 0 ? ((diff / oldTotal) * 100).toFixed(1) : 0;
-                                    
-                                    if (diff > 0) {
-                                        // Old site has more pages
-                                        document.getElementById('summaryOldNote').textContent = `+${diff.toLocaleString()} more than new site`;
-                                        document.getElementById('summaryNewNote').textContent = `${diffPercent}% fewer than old site`;
-                                        document.getElementById('summaryComparisonText').innerHTML = 
-                                            `⚠️ <strong>Notice:</strong> The new site has ${diff.toLocaleString()} fewer pages (${diffPercent}% less) than the old site. ` +
-                                            `This could indicate incomplete migration, missing pages, or that the new site structure is different.`;
-                                        document.getElementById('summaryComparisonNote').classList.remove('hidden');
-                                    } else if (diff < 0) {
-                                        // New site has more pages
-                                        const absDiff = Math.abs(diff);
-                                        const newDiffPercent = newTotal > 0 ? ((absDiff / newTotal) * 100).toFixed(1) : 0;
-                                        document.getElementById('summaryOldNote').textContent = `${newDiffPercent}% fewer than new site`;
-                                        document.getElementById('summaryNewNote').textContent = `+${absDiff.toLocaleString()} more than old site`;
-                                        document.getElementById('summaryComparisonText').innerHTML = 
-                                            `ℹ️ <strong>Notice:</strong> The new site has ${absDiff.toLocaleString()} more pages (${newDiffPercent}% more) than the old site. ` +
-                                            `These are new pages that didn't exist on the old site.`;
-                                        document.getElementById('summaryComparisonNote').classList.remove('hidden');
-                                    } else {
-                                        // Same number of pages
-                                        document.getElementById('summaryOldNote').textContent = '';
-                                        document.getElementById('summaryNewNote').textContent = '';
-                                        document.getElementById('summaryComparisonNote').classList.add('hidden');
-                                    }
-                                    
-                                    // Final progress update
-                                    if (data.data.old_sample_urls && data.data.new_sample_urls) {
-                                        const finalProgress = {
-                                            old_site: {
-                                                pages_scanned: data.data.old_sample_urls.length,
-                                                total_estimate: data.data.old_sample_urls.length,
-                                                urls_found: data.data.missing_on_new.length + data.data.matched.length
-                                            },
-                                            new_site: {
-                                                pages_scanned: data.data.new_sample_urls.length,
-                                                total_estimate: data.data.new_sample_urls.length,
-                                                urls_found: data.data.new_only.length + data.data.matched.length
-                                            },
-                                            comparison: {
-                                                missing_count: data.data.missing_on_new.length,
-                                                new_only_count: data.data.new_only.length,
-                                                matched_count: data.data.matched.length,
-                                                match_percentage: data.data.matched.length > 0 
-                                                    ? (data.data.matched.length / (data.data.missing_on_new.length + data.data.matched.length) * 100)
-                                                    : 0
-                                            },
-                                            percentage: 100.0
-                                        };
-                                        updateProgressUI(finalProgress);
-                                    }
-                                    
-                                    // Show warnings if present
-                                    if (data.data.warnings && data.data.warnings.length > 0) {
-                                        document.getElementById('warningTitle').textContent = data.data.warning_message || 'Some operations failed:';
-                                        const warningList = document.getElementById('warningList');
-                                        warningList.innerHTML = data.data.warnings.map(w => `<li>${w}</li>`).join('');
-                                        document.getElementById('warning').classList.remove('hidden');
-                                    }
-                                    
-                                    // Show results
-                                    document.getElementById('loading').classList.add('hidden');
-                                    document.getElementById('results').classList.remove('hidden');
-                                    addProgressMessage('✅ Comparison complete!');
-                                    
-                                    // Show initial tab
-                                    showTab('missing_on_new');
-                                } else if (data.type === 'error') {
-                                    throw new Error(data.message);
-                                }
-                            } catch (parseError) {
-                                console.error('Error parsing SSE data:', parseError, line);
-                            }
-                        }
-                    }
-                }
-                
-            } catch (error) {
-                console.error('Error in form submission:', error);
-                document.getElementById('loading').classList.add('hidden');
-                document.getElementById('statsPanel').classList.remove('hidden');
-                document.getElementById('progressLog').classList.remove('hidden');
-                
-                // Show error message
-                const errorDiv = document.getElementById('error');
-                const errorMessage = document.getElementById('errorMessage');
-                errorMessage.textContent = `Network error: ${error.message}. The crawl may still be running in the background. Please refresh the page to check status.`;
-                errorDiv.classList.remove('hidden');
-                const errorMsg = error.message || 'An unknown error occurred';
-                document.getElementById('errorMessage').textContent = errorMsg;
-                document.getElementById('error').classList.remove('hidden');
-                addProgressMessage(`❌ Error: ${errorMsg}`);
-            }
-        });
-        
-        // Tab switching
-        function showTab(tabName) {
-            activeTab = tabName;
-            
-            // Update tab buttons
-            document.querySelectorAll('.tab-button').forEach(btn => {
-                if (btn.dataset.tab === tabName) {
-                    btn.classList.add('border-blue-500', 'text-blue-600');
-                    btn.classList.remove('text-gray-500', 'border-transparent');
-                } else {
-                    btn.classList.remove('border-blue-500', 'text-blue-600');
-                    btn.classList.add('text-gray-500', 'border-transparent');
-                }
-            });
-            
-            // Update table
-            const urls = currentData[tabName] || [];
-            const tbody = document.getElementById('tableBody');
-            const emptyMessage = document.getElementById('emptyMessage');
-            
-            if (urls.length === 0) {
-                tbody.innerHTML = '';
-                emptyMessage.classList.remove('hidden');
-                document.getElementById('tableBody').parentElement.parentElement.classList.add('hidden');
-            } else {
-                emptyMessage.classList.add('hidden');
-                document.getElementById('tableBody').parentElement.parentElement.classList.remove('hidden');
-                
-                tbody.innerHTML = urls.map(url => {
-                    const path = new URL(url).pathname;
-                    return `
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                <a href="${url}" target="_blank" class="text-blue-600 hover:text-blue-800">
-                                    ${url}
-                                </a>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                ${path}
-                            </td>
-                        </tr>
-                    `;
-                }).join('');
-            }
-        }
-        
-        // Tab button clicks
-        document.querySelectorAll('.tab-button').forEach(btn => {
-            btn.addEventListener('click', () => {
-                showTab(btn.dataset.tab);
-            });
-        });
-        
-        // Export button
-        document.getElementById('exportBtn').addEventListener('click', async () => {
-            const formData = new FormData();
-            formData.append('category', activeTab);
-            formData.append('missing_on_new', JSON.stringify(currentData.missing_on_new || []));
-            formData.append('new_only', JSON.stringify(currentData.new_only || []));
-            formData.append('matched', JSON.stringify(currentData.matched || []));
-            formData.append('export_all', 'false');
-            
-            try {
-                const response = await fetch('/export', {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error || 'Export failed');
-                }
-                
-                const blob = await response.blob();
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `${activeTab}.csv`;
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-                document.body.removeChild(a);
-            } catch (error) {
-                alert('Failed to export CSV: ' + error.message);
-            }
-        });
-        
-        // Export All button
-        document.getElementById('exportAllBtn').addEventListener('click', async () => {
-            const formData = new FormData();
-            formData.append('category', 'missing_on_new'); // Required but not used when export_all=true
-            formData.append('missing_on_new', JSON.stringify(currentData.missing_on_new || []));
-            formData.append('new_only', JSON.stringify(currentData.new_only || []));
-            formData.append('matched', JSON.stringify(currentData.matched || []));
-            formData.append('export_all', 'true');
-            
-            try {
-                const response = await fetch('/export', {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error || 'Export failed');
-                }
-                
-                const blob = await response.blob();
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'all_differences.csv';
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-                document.body.removeChild(a);
-            } catch (error) {
-                alert('Failed to export CSV: ' + error.message);
-            }
-        });
-        
-        }); // End of DOMContentLoaded
-    </script>
+    <script type="module" src="/static/js/app.js"></script>
 </body>
 </html>
-
