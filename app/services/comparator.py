@@ -253,6 +253,32 @@ class SiteComparator:
         self._send_message(f"   Old site: {len(old_urls)} URLs found")
         self._send_message(f"   New site: {len(new_urls)} URLs found")
         
+        # Get the expected domains from the original site URLs (not sitemaps)
+        old_base_domain = URLNormalizer.normalize_domain(urlparse(getattr(self, '_old_base_url', '')).netloc)
+        new_base_domain = URLNormalizer.normalize_domain(urlparse(getattr(self, '_new_base_url', '')).netloc)
+        
+        # Filter out external URLs that shouldn't be in the results
+        def is_internal(url: str, expected_domain: str) -> bool:
+            """Check if URL belongs to the expected domain."""
+            try:
+                url_domain = URLNormalizer.normalize_domain(urlparse(url).netloc)
+                return url_domain == expected_domain
+            except:
+                return False
+        
+        old_urls_filtered = {url for url in old_urls if is_internal(url, old_base_domain)}
+        new_urls_filtered = {url for url in new_urls if is_internal(url, new_base_domain)}
+        
+        # Log if we filtered any external URLs
+        old_filtered_count = len(old_urls) - len(old_urls_filtered)
+        new_filtered_count = len(new_urls) - len(new_urls_filtered)
+        if old_filtered_count > 0 or new_filtered_count > 0:
+            self._send_message(f"   ⚠️ Filtered out {old_filtered_count + new_filtered_count} external URLs")
+        
+        # Use filtered URLs for comparison
+        old_urls = old_urls_filtered
+        new_urls = new_urls_filtered
+        
         # Extract paths for comparison
         old_paths = {URLNormalizer.get_path(url) for url in old_urls}
         new_paths = {URLNormalizer.get_path(url) for url in new_urls}
@@ -354,6 +380,12 @@ class SiteComparator:
             self.progress.new_site.total_estimate = len(new_urls)
             self.progress.old_site.pages_scanned = len(old_urls)
             self.progress.new_site.pages_scanned = len(new_urls)
+            # Update with verified comparison stats
+            self.progress.set_verified_stats(
+                missing_count=len(missing_on_new),
+                new_only_count=len(new_only),
+                matched_count=len(matched)
+            )
             self.progress.send_update()
         
         return ComparisonResult(

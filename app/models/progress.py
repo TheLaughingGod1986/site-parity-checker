@@ -144,6 +144,18 @@ class ProgressTracker:
         self._missing_count = len(old_paths - new_paths)
         self._new_only_count = len(new_paths - old_paths)
     
+    def set_verified_stats(self, missing_count: int, new_only_count: int, matched_count: int) -> None:
+        """Set verified comparison statistics after verification step.
+        
+        Args:
+            missing_count: Verified count of missing URLs
+            new_only_count: Verified count of new only URLs
+            matched_count: Verified count of matched URLs
+        """
+        self._missing_count = missing_count
+        self._new_only_count = new_only_count
+        self._matched_count = matched_count
+    
     def should_send_update(self, site: str = 'old') -> bool:
         """Check if we should send a progress update.
         
