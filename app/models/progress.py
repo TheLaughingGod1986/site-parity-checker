@@ -86,11 +86,17 @@ class ProgressTracker:
     
     @property
     def match_percentage(self) -> float:
-        """Calculate match percentage."""
+        """Calculate match percentage (capped at 100%).
+        
+        Match percentage = (matched pages / old site total) * 100
+        This shows what percentage of old site pages exist on the new site.
+        """
         total_old = len(self.old_site.urls_found)
         if total_old <= 0:
             return 0.0
-        return (self._matched_count / total_old) * 100
+        percentage = (self._matched_count / total_old) * 100
+        # Cap at 100% - can't have more than 100% match
+        return min(percentage, 100.0)
     
     def record_page(self, site: str = 'old') -> None:
         """Record that a page was processed.

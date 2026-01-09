@@ -183,7 +183,7 @@
                 <div class="bg-yellow-50 rounded-lg p-4">
                     <div class="text-sm text-gray-600 mb-1">Match Rate</div>
                     <div class="text-2xl font-bold text-yellow-600" id="statsMatchPercent">0%</div>
-                    <div class="text-xs text-gray-500 mt-1">of old site</div>
+                    <div class="text-xs text-gray-500 mt-1">of old site pages found on new site</div>
                 </div>
             </div>
             
@@ -257,21 +257,63 @@
                     <p class="text-sm text-amber-800" id="summaryComparisonText"></p>
                 </div>
                 
+                <!-- Number Breakdown -->
+                <div class="bg-white rounded-lg p-4 border border-gray-200 mb-4">
+                    <h4 class="text-sm font-semibold text-gray-700 mb-3">📊 How the numbers break down:</h4>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                            <span class="text-gray-600">Old Site Total:</span>
+                            <span class="font-semibold text-gray-800" id="breakdownOldTotal">0</span>
+                        </div>
+                        <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                            <span class="text-gray-600">= Matched (on both sites):</span>
+                            <span class="font-semibold text-green-600" id="breakdownMatched">0</span>
+                        </div>
+                        <div class="flex items-center justify-between py-2 border-b border-gray-100">
+                            <span class="text-gray-600">+ Missing on New (only on old):</span>
+                            <span class="font-semibold text-red-600" id="breakdownMissing">0</span>
+                        </div>
+                        <div class="mt-3 pt-2 border-t border-gray-200">
+                            <div class="flex items-center justify-between py-2">
+                                <span class="text-gray-600">New Site Total:</span>
+                                <span class="font-semibold text-gray-800" id="breakdownNewTotal">0</span>
+                            </div>
+                            <div class="flex items-center justify-between py-2">
+                                <span class="text-gray-600">= Matched (on both sites):</span>
+                                <span class="font-semibold text-green-600" id="breakdownMatched2">0</span>
+                            </div>
+                            <div class="flex items-center justify-between py-2">
+                                <span class="text-gray-600">+ New Only (only on new):</span>
+                                <span class="font-semibold text-indigo-600" id="breakdownNewOnly">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
                 <!-- Category Explanations -->
                 <div class="bg-white rounded-lg p-4 border border-gray-200">
                     <h4 class="text-sm font-semibold text-gray-700 mb-3">📖 What do these categories mean?</h4>
                     <div class="space-y-3 text-sm">
                         <div class="flex items-start">
                             <span class="text-red-600 font-bold mr-2">•</span>
-                            <div><span class="font-semibold text-gray-800">Missing on New:</span> <span class="text-gray-600">URLs on old site not found on new site.</span></div>
+                            <div>
+                                <span class="font-semibold text-gray-800">Missing on New:</span>
+                                <span class="text-gray-600">Pages that exist on the old site but are missing from the new site. These need to be migrated or fixed.</span>
+                            </div>
                         </div>
                         <div class="flex items-start">
                             <span class="text-indigo-600 font-bold mr-2">•</span>
-                            <div><span class="font-semibold text-gray-800">New Only:</span> <span class="text-gray-600">URLs only on new site (new pages).</span></div>
+                            <div>
+                                <span class="font-semibold text-gray-800">New Only:</span>
+                                <span class="text-gray-600">Pages that only exist on the new site. These are new content created after the migration.</span>
+                            </div>
                         </div>
                         <div class="flex items-start">
                             <span class="text-green-600 font-bold mr-2">•</span>
-                            <div><span class="font-semibold text-gray-800">Matched:</span> <span class="text-gray-600">URLs on both sites.</span></div>
+                            <div>
+                                <span class="font-semibold text-gray-800">Matched:</span>
+                                <span class="text-gray-600">Pages that exist on both sites. These were successfully migrated.</span>
+                            </div>
                         </div>
                     </div>
                 </div>

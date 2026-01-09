@@ -27,6 +27,14 @@ export function updateResultsUI(data) {
     setText('summaryOldTotal', oldTotal.toLocaleString());
     setText('summaryNewTotal', newTotal.toLocaleString());
     
+    // Update breakdown section
+    setText('breakdownOldTotal', oldTotal.toLocaleString());
+    setText('breakdownNewTotal', newTotal.toLocaleString());
+    setText('breakdownMatched', data.matched.length.toLocaleString());
+    setText('breakdownMatched2', data.matched.length.toLocaleString());
+    setText('breakdownMissing', data.missing_on_new.length.toLocaleString());
+    setText('breakdownNewOnly', data.new_only.length.toLocaleString());
+    
     // Update comparison notes
     updateComparisonNotes(oldTotal, newTotal);
     
@@ -55,26 +63,26 @@ function updateComparisonNotes(oldTotal, newTotal) {
     const diffPercent = oldTotal > 0 ? ((Math.abs(diff) / oldTotal) * 100).toFixed(1) : 0;
     
     if (diff > 0) {
-        setText('summaryOldNote', `+${diff.toLocaleString()} more than new site`);
-        setText('summaryNewNote', `${diffPercent}% fewer than old site`);
+        setText('summaryOldNote', `+${diff.toLocaleString()} more pages`);
+        setText('summaryNewNote', `${diffPercent}% fewer pages`);
         setHtml('summaryComparisonText', 
-            `⚠️ <strong>Notice:</strong> The new site has ${diff.toLocaleString()} fewer pages (${diffPercent}% less) than the old site. ` +
-            `This could indicate incomplete migration, missing pages, or that the new site structure is different.`
+            `⚠️ <strong>Summary:</strong> The new site has ${diff.toLocaleString()} fewer pages than the old site. ` +
+            `Check the "Missing on New" tab to see which pages need to be migrated.`
         );
         show('summaryComparisonNote');
     } else if (diff < 0) {
         const absDiff = Math.abs(diff);
         const newDiffPercent = newTotal > 0 ? ((absDiff / newTotal) * 100).toFixed(1) : 0;
-        setText('summaryOldNote', `${newDiffPercent}% fewer than new site`);
-        setText('summaryNewNote', `+${absDiff.toLocaleString()} more than old site`);
+        setText('summaryOldNote', `${newDiffPercent}% fewer pages`);
+        setText('summaryNewNote', `+${absDiff.toLocaleString()} more pages`);
         setHtml('summaryComparisonText',
-            `ℹ️ <strong>Notice:</strong> The new site has ${absDiff.toLocaleString()} more pages (${newDiffPercent}% more) than the old site. ` +
-            `These are new pages that didn't exist on the old site.`
+            `ℹ️ <strong>Summary:</strong> The new site has ${absDiff.toLocaleString()} more pages than the old site. ` +
+            `These are new pages created after the migration. Check the "New Only" tab to see them.`
         );
         show('summaryComparisonNote');
     } else {
-        setText('summaryOldNote', '');
-        setText('summaryNewNote', '');
+        setText('summaryOldNote', 'Same number of pages');
+        setText('summaryNewNote', 'Same number of pages');
         hide('summaryComparisonNote');
     }
 }
