@@ -1,11 +1,13 @@
 """Site comparison logic."""
 
+import asyncio
 from urllib.parse import urlparse
 from typing import Set, Dict, List, Optional
 
 from .url_utils import URLNormalizer, get_base_domain
 from .sitemap import SitemapFetcher
 from .crawler import WebCrawler
+from .async_crawler import AsyncWebCrawler
 from ..models.progress import ProgressTracker
 from ..models.comparison import ComparisonResult
 from ..config import CrawlConfig, DEFAULT_CRAWL_CONFIG
@@ -87,27 +89,30 @@ class SiteComparator:
             
             self._send_message(f"✓ Sitemaps: Old={len(old_sitemap_urls)}, New={len(new_sitemap_urls)}")
         
-        # Crawl if needed
+        # Crawl if needed - use async crawler for parallel fetching
         if combine_methods or use_crawl:
-            self._send_message("🕷️ Crawling sites...")
+            self._send_message("🚀 Crawling sites in parallel (async mode)...")
             
-            old_crawler = WebCrawler(
+            old_crawler = AsyncWebCrawler(
                 config=self.config,
                 progress=self.progress,
                 site='old',
                 use_js_rendering=True,
-                respect_robots=not ignore_robots
+                respect_robots=not ignore_robots,
+                concurrency=10
             )
-            new_crawler = WebCrawler(
+            new_crawler = AsyncWebCrawler(
                 config=self.config,
                 progress=self.progress,
                 site='new',
                 use_js_rendering=True,
-                respect_robots=not ignore_robots
+                respect_robots=not ignore_robots,
+                concurrency=10
             )
             
-            old_crawl_urls, old_crawl_errors = old_crawler.crawl(old_url)
-            new_crawl_urls, new_crawl_errors = new_crawler.crawl(new_url)
+            # Run both crawls in parallel
+            old_crawl_urls, new_crawl_urls, old_crawl_errors, new_crawl_errors = \
+                self._run_parallel_crawls(old_crawler, old_url, new_crawler, new_url)
             
             old_urls.update(old_crawl_urls)
             new_urls.update(new_crawl_urls)
@@ -131,6 +136,39 @@ class SiteComparator:
             old_urls, new_urls, errors,
             old_sitemap, new_sitemap
         )
+    
+    def _run_parallel_crawls(self,
+                              old_crawler: AsyncWebCrawler,
+                              old_url: str,
+                              new_crawler: AsyncWebCrawler,
+                              new_url: str):
+        """Run both site crawls using async (sequential crawls with concurrent page fetching).
+        
+        Note: We run sites sequentially to avoid Playwright conflicts, but
+        each site's pages are fetched concurrently for speed.
+        
+        Returns:
+            Tuple of (old_urls, new_urls, old_errors, new_errors)
+        """
+        async def crawl_both():
+            # Crawl old site first (with concurrent page fetching)
+            old_result = await old_crawler.crawl(old_url)
+            # Then crawl new site (with concurrent page fetching)
+            new_result = await new_crawler.crawl(new_url)
+            return old_result[0], new_result[0], old_result[1], new_result[1]
+        
+        # Create a new event loop and run
+        try:
+            # Try to get existing loop (for testing in async context)
+            loop = asyncio.get_running_loop()
+            # If we're in an async context, we need to run in a thread
+            import concurrent.futures
+            with concurrent.futures.ThreadPoolExecutor() as executor:
+                future = executor.submit(asyncio.run, crawl_both())
+                return future.result()
+        except RuntimeError:
+            # No running loop, create one
+            return asyncio.run(crawl_both())
     
     def _sitemap_fallback(self,
                           old_urls: Set[str],
