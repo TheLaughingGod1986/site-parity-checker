@@ -490,6 +490,13 @@ function setupExportHandlers() {
  */
 async function exportData(exportAll) {
     const data = getCurrentData();
+    
+    // Check if we have data
+    if (!data || (!data.missing_on_new?.length && !data.new_only?.length && !data.matched?.length)) {
+        alert('No data available to export. Please run a comparison first.');
+        return;
+    }
+    
     const formData = new FormData();
     
     formData.append('category', getActiveTab());
@@ -509,17 +516,40 @@ async function exportData(exportAll) {
             throw new Error(errorData.error || 'Export failed');
         }
         
+        // Get filename from Content-Disposition header or use default
+        const contentDisposition = response.headers.get('Content-Disposition');
+        let filename = exportAll ? 'all_differences.csv' : `${getActiveTab()}.csv`;
+        if (contentDisposition) {
+            const filenameMatch = contentDisposition.match(/filename="?([^"]+)"?/);
+            if (filenameMatch) {
+                filename = filenameMatch[1];
+            }
+        }
+        
+        // Get content type from response
+        const contentType = response.headers.get('Content-Type') || 'text/csv';
         const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
+        
+        // Create blob with explicit type
+        const typedBlob = new Blob([blob], { type: contentType });
+        const url = window.URL.createObjectURL(typedBlob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = exportAll ? 'all_differences.csv' : `${getActiveTab()}.csv`;
+        a.download = filename;
+        a.style.display = 'none';
         document.body.appendChild(a);
+        
+        // Trigger download
         a.click();
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
+        
+        // Clean up after a delay to ensure download starts
+        setTimeout(() => {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }, 200);
     } catch (error) {
         alert('Failed to export CSV: ' + error.message);
+        console.error('Export error:', error);
     }
 }
 
@@ -528,6 +558,13 @@ async function exportData(exportAll) {
  */
 async function exportPdf() {
     const data = getCurrentData();
+    
+    // Check if we have data
+    if (!data || (!data.missing_on_new?.length && !data.new_only?.length && !data.matched?.length)) {
+        alert('No data available to export. Please run a comparison first.');
+        return;
+    }
+    
     const formData = new FormData();
     
     formData.append('old_url', getEl('old_url')?.value || '');
@@ -554,17 +591,40 @@ async function exportPdf() {
             throw new Error(errorData.error || 'PDF export failed');
         }
         
+        // Get filename from Content-Disposition header or use default
+        const contentDisposition = response.headers.get('Content-Disposition');
+        let filename = 'site_parity_report.pdf';
+        if (contentDisposition) {
+            const filenameMatch = contentDisposition.match(/filename="?([^"]+)"?/);
+            if (filenameMatch) {
+                filename = filenameMatch[1];
+            }
+        }
+        
+        // Get content type from response
+        const contentType = response.headers.get('Content-Type') || 'text/csv';
         const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
+        
+        // Create blob with explicit type
+        const typedBlob = new Blob([blob], { type: contentType });
+        const url = window.URL.createObjectURL(typedBlob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'site_parity_report.pdf';
+        a.download = filename;
+        a.style.display = 'none';
         document.body.appendChild(a);
+        
+        // Trigger download
         a.click();
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
+        
+        // Clean up after a delay to ensure download starts
+        setTimeout(() => {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }, 200);
     } catch (error) {
         alert('Failed to export PDF: ' + error.message);
+        console.error('PDF export error:', error);
     }
 }
 
