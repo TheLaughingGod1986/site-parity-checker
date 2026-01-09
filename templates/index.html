@@ -19,10 +19,45 @@
     <style>
         /* Dark mode transitions */
         html { transition: background-color 0.3s ease, color 0.3s ease; }
-        .dark body { background-color: #1f2937; }
+        .dark body { background-color: #0a0f1a; }
+        
+        /* Custom dark mode input styling */
+        .dark input::placeholder,
+        .dark textarea::placeholder { color: #64748b; }
+        
+        /* Scrollbar styling for dark mode */
+        .dark ::-webkit-scrollbar { width: 8px; }
+        .dark ::-webkit-scrollbar-track { background: #0f172a; }
+        .dark ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        .dark ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        
+        /* Progress log dark styling */
+        .dark #progressLog { background: #030712 !important; border-color: #1e293b !important; }
+        
+        /* Improved dark mode focus states */
+        .dark input:focus, .dark textarea:focus, .dark select:focus {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+        }
+        
+        /* Enhanced card shadows in dark mode */
+        .dark .shadow-lg {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Glow effect for active elements in dark mode */
+        .dark button:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+        }
+        
+        /* Dark mode card hover effects */
+        .dark .stat-card:hover {
+            transform: translateY(-1px);
+            transition: transform 0.2s ease;
+        }
     </style>
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
+<body class="bg-gray-50 dark:bg-[#0a0f1a] min-h-screen transition-colors duration-300">
     <div class="container mx-auto px-4 py-8 max-w-6xl">
         <!-- Header with Dark Mode Toggle -->
         <div class="flex items-center justify-between mb-8">
@@ -33,11 +68,11 @@
                     View Last Results
                 </button>
                 <!-- Dark Mode Toggle -->
-                <button id="darkModeToggle" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors" title="Toggle dark mode">
-                    <svg id="sunIcon" class="w-5 h-5 text-yellow-500 hidden dark:block" fill="currentColor" viewBox="0 0 20 20">
+                <button id="darkModeToggle" class="p-2.5 rounded-xl bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 border border-gray-200 dark:border-slate-600 transition-all duration-200 shadow-sm hover:shadow-md dark:shadow-slate-900/30" title="Toggle dark mode">
+                    <svg id="sunIcon" class="w-5 h-5 text-amber-400 hidden dark:block drop-shadow-[0_0_3px_rgba(251,191,36,0.5)]" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"/>
                     </svg>
-                    <svg id="moonIcon" class="w-5 h-5 text-gray-700 block dark:hidden" fill="currentColor" viewBox="0 0 20 20">
+                    <svg id="moonIcon" class="w-5 h-5 text-indigo-600 block dark:hidden" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
                     </svg>
                 </button>
@@ -45,35 +80,35 @@
         </div>
         
         <!-- Form Section -->
-        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg dark:shadow-slate-900/50 p-6 mb-8 border border-gray-100 dark:border-slate-700">
             <form id="compareForm" class="space-y-4">
                 <div>
-                    <label for="old_url" class="block text-sm font-medium text-gray-700 mb-2">Old Site URL</label>
+                    <label for="old_url" class="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2">Old Site URL</label>
                     <input type="url" id="old_url" name="old_url" required placeholder="https://oldsite.com"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-colors">
                 </div>
                 
                 <div>
-                    <label for="new_url" class="block text-sm font-medium text-gray-700 mb-2">New Site URL</label>
+                    <label for="new_url" class="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2">New Site URL</label>
                     <input type="url" id="new_url" name="new_url" required placeholder="https://newsite.com"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-colors">
                 </div>
                 
                 <!-- Crawl Options -->
-                <div class="border-t border-gray-200 pt-4 mt-4">
+                <div class="border-t border-gray-200 dark:border-slate-700 pt-4 mt-4">
                     <div class="flex items-center mb-4">
                         <input type="checkbox" id="use_crawl" name="use_crawl" value="true"
-                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                        <label for="use_crawl" class="ml-2 block text-sm text-gray-700">
+                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-slate-600 rounded bg-white dark:bg-slate-900">
+                        <label for="use_crawl" class="ml-2 block text-sm text-gray-700 dark:text-slate-200">
                             <span class="font-medium">Crawl site instead of using sitemap</span>
-                            <span class="text-xs text-gray-500 block mt-1">Discover all pages by crawling links (slower but more thorough)</span>
+                            <span class="text-xs text-gray-500 dark:text-slate-400 block mt-1">Discover all pages by crawling links (slower but more thorough)</span>
                         </label>
                     </div>
                     
                     <div id="crawlOptions" class="hidden ml-6">
                         <div class="flex items-center gap-4 mb-4">
-                            <label for="max_pages" class="text-sm font-medium text-gray-700">Max pages per site:</label>
-                            <select id="max_pages" name="max_pages" class="px-3 py-1 border border-gray-300 rounded-md text-sm">
+                            <label for="max_pages" class="text-sm font-medium text-gray-700 dark:text-slate-200">Max pages per site:</label>
+                            <select id="max_pages" name="max_pages" class="px-3 py-1.5 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100">
                                 <option value="100">100 (quick test)</option>
                                 <option value="500">500 (fast)</option>
                                 <option value="1000">1,000 (standard)</option>
@@ -85,10 +120,10 @@
                     
                     <div class="flex items-center mt-4">
                         <input type="checkbox" id="combine_methods" name="combine_methods" value="true"
-                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                        <label for="combine_methods" class="ml-2 block text-sm text-gray-700">
+                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-slate-600 rounded bg-white dark:bg-slate-900">
+                        <label for="combine_methods" class="ml-2 block text-sm text-gray-700 dark:text-slate-200">
                             <span class="font-medium">Use both sitemap and crawling (most comprehensive)</span>
-                            <span class="text-xs text-gray-500 block mt-1">Combines sitemap URLs with crawled URLs for maximum coverage</span>
+                            <span class="text-xs text-gray-500 dark:text-slate-400 block mt-1">Combines sitemap URLs with crawled URLs for maximum coverage</span>
                         </label>
                     </div>
                     
@@ -105,19 +140,19 @@
                 </div>
                 
                 <!-- Advanced Options Toggle -->
-                <div class="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
-                    <button type="button" id="advancedOptionsToggle" class="flex items-center text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200">
-                        <svg id="advancedOptionsArrow" class="w-4 h-4 mr-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="border-t border-gray-200 dark:border-slate-700 pt-4 mt-4">
+                    <button type="button" id="advancedOptionsToggle" class="flex items-center text-sm text-gray-600 dark:text-slate-300 hover:text-gray-800 dark:hover:text-slate-100 transition-colors group">
+                        <svg id="advancedOptionsArrow" class="w-4 h-4 mr-2 transition-transform text-gray-400 dark:text-slate-500 group-hover:text-gray-600 dark:group-hover:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                         </svg>
-                        <span class="font-medium">Advanced Options</span>
+                        <span class="font-medium">⚙️ Advanced Options</span>
                     </button>
                     
-                    <div id="advancedOptions" class="hidden mt-4 space-y-4 ml-6">
+                    <div id="advancedOptions" class="hidden mt-4 space-y-4 ml-6 p-4 bg-gray-50 dark:bg-slate-900/70 rounded-lg border border-gray-100 dark:border-slate-600">
                         <!-- Comparison Mode -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Comparison Mode</label>
-                            <select id="comparison_mode" name="comparison_mode" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm bg-white dark:bg-gray-800 dark:text-white">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2">Comparison Mode</label>
+                            <select id="comparison_mode" name="comparison_mode" class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100">
                                 <option value="fuzzy" selected>Fuzzy (ignore trailing slashes, case differences)</option>
                                 <option value="strict">Strict (exact path match only)</option>
                                 <option value="smart">Smart (detect redirects and URL aliases)</option>
@@ -126,49 +161,49 @@
                         
                         <!-- URL Filtering -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Exclude Paths</label>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2">Exclude Paths</label>
                             <input type="text" id="exclude_paths" name="exclude_paths" placeholder="/tag/*, /author/*, /page/*"
-                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm bg-white dark:bg-gray-800 dark:text-white">
-                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Comma-separated list of paths to exclude. Use * as wildcard.</p>
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100">
+                            <p class="text-xs text-gray-500 dark:text-slate-400 mt-1">Comma-separated list of paths to exclude. Use * as wildcard.</p>
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Custom Exclude Regex</label>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-slate-200 mb-2">Custom Exclude Regex</label>
                             <input type="text" id="exclude_regex" name="exclude_regex" placeholder="^/blog/[0-9]+$"
-                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm bg-white dark:bg-gray-800 dark:text-white">
-                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Regular expression pattern to exclude matching paths.</p>
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100 font-mono">
+                            <p class="text-xs text-gray-500 dark:text-slate-400 mt-1">Regular expression pattern to exclude matching paths.</p>
                         </div>
                         
                         <!-- Authentication -->
-                        <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
-                            <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">🔒 Authentication (for protected sites)</h4>
+                        <div class="border-t border-gray-200 dark:border-slate-700 pt-4">
+                            <h4 class="text-sm font-medium text-amber-700 dark:text-amber-400 mb-3">🔒 Authentication (for protected sites)</h4>
                             
                             <div class="space-y-3">
                                 <div class="flex items-center gap-4">
-                                    <label class="text-sm text-gray-600 dark:text-gray-400 w-24">Basic Auth:</label>
+                                    <label class="text-sm text-gray-600 dark:text-slate-400 w-24">Basic Auth:</label>
                                     <input type="text" id="auth_user" name="auth_user" placeholder="Username"
-                                        class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm bg-white dark:bg-gray-800 dark:text-white">
+                                        class="flex-1 px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100">
                                     <input type="password" id="auth_pass" name="auth_pass" placeholder="Password"
-                                        class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm bg-white dark:bg-gray-800 dark:text-white">
+                                        class="flex-1 px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100">
                                 </div>
                                 
                                 <div>
-                                    <label class="block text-sm text-gray-600 dark:text-gray-400 mb-1">Custom Headers (JSON):</label>
+                                    <label class="block text-sm text-gray-600 dark:text-slate-400 mb-1">Custom Headers (JSON):</label>
                                     <textarea id="custom_headers" name="custom_headers" rows="2" placeholder='{"Authorization": "Bearer token123"}'
-                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm bg-white dark:bg-gray-800 dark:text-white font-mono"></textarea>
+                                        class="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100 font-mono"></textarea>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="flex gap-4">
+                <div class="flex gap-4 pt-2">
                     <button type="submit" id="submitBtn"
-                        class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150">
+                        class="flex-1 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-medium py-2.5 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-slate-800 transition-all shadow-md hover:shadow-lg">
                         Compare Sites
                     </button>
                     <button type="button" id="cancelBtn"
-                        class="hidden px-6 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition duration-150">
+                        class="hidden px-6 py-2.5 bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700 text-white font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-slate-800 transition-all shadow-md">
                         ✕ Cancel
                     </button>
                 </div>
@@ -177,73 +212,77 @@
         
         <!-- Loading Indicator -->
         <div id="loading" class="hidden text-center py-8">
-            <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-            <p id="loadingText" class="mt-4 text-gray-600">Analyzing sitemaps...</p>
+            <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-blue-400"></div>
+            <p id="loadingText" class="mt-4 text-gray-600 dark:text-slate-300">Analyzing sitemaps...</p>
         </div>
         
         <!-- Progress Bar -->
-        <div id="progressBarContainer" class="hidden bg-white rounded-lg shadow-md p-6 mb-4">
+        <div id="progressBarContainer" class="hidden bg-white dark:bg-slate-800 rounded-xl shadow-lg dark:shadow-slate-900/50 p-6 mb-4 border border-gray-100 dark:border-slate-700">
             <div class="flex justify-between items-center mb-2">
-                <span class="text-sm font-medium text-gray-700">Progress</span>
-                <span id="progressPercentage" class="text-sm font-semibold text-blue-600">0%</span>
+                <span class="text-sm font-medium text-gray-700 dark:text-slate-200">Progress</span>
+                <span id="progressPercentage" class="text-sm font-semibold text-blue-600 dark:text-blue-400">0%</span>
             </div>
-            <div class="w-full bg-gray-200 rounded-full h-3 mb-4">
-                <div id="progressBarFill" class="bg-blue-600 h-3 rounded-full transition-all duration-300" style="width: 0%"></div>
+            <div class="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-3 mb-4 overflow-hidden">
+                <div id="progressBarFill" class="bg-gradient-to-r from-blue-500 to-blue-600 dark:from-blue-400 dark:to-blue-500 h-3 rounded-full transition-all duration-300" style="width: 0%"></div>
             </div>
-            <div class="text-sm text-gray-600 text-center">
+            <div class="text-sm text-gray-600 dark:text-slate-300 text-center">
                 <span id="progressPages">0 / 0</span> pages scanned
-                <span class="text-xs text-gray-500 ml-1">(total from both sites)</span>
+                <span class="text-xs text-gray-500 dark:text-slate-400 ml-1">(total from both sites)</span>
             </div>
         </div>
         
         <!-- Real-time Statistics Panel -->
-        <div id="statsPanel" class="hidden bg-white rounded-lg shadow-md p-6 mb-4">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">Real-time Statistics</h3>
+        <div id="statsPanel" class="hidden bg-white dark:bg-slate-800 rounded-xl shadow-lg dark:shadow-slate-900/50 p-6 mb-4 border border-gray-100 dark:border-slate-700">
+            <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Real-time Statistics</h3>
             
             <!-- Scan Status Cards -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                <div class="bg-blue-50 rounded-lg p-4 border-2 border-blue-200">
+                <div class="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-4 border-2 border-blue-200 dark:border-blue-800">
                     <div class="flex items-center justify-between mb-2">
-                        <span class="text-sm font-semibold text-gray-700">Old Site Scan Status</span>
-                        <span id="oldSiteStatusBadge" class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">Scanning...</span>
+                        <span class="text-sm font-semibold text-gray-700 dark:text-slate-200">Old Site Scan Status</span>
+                        <span id="oldSiteStatusBadge" class="text-xs bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300 px-2 py-1 rounded-full">Scanning...</span>
                     </div>
-                    <div class="text-2xl font-bold text-blue-600 mb-1">
-                        <span id="oldSitePagesScanned">0</span> / <span id="oldSiteTotalEstimate">0</span>
+                    <div class="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-1">
+                        <span id="oldSitePagesScanned">0</span> <span class="text-base font-normal text-gray-500 dark:text-slate-400">pages scanned</span>
                     </div>
-                    <div class="text-xs text-gray-600 mb-2">Pages Scanned</div>
-                    <div class="w-full bg-gray-200 rounded-full h-2">
-                        <div id="oldSiteProgressBar" class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    <div class="text-xs text-gray-600 dark:text-slate-400 mb-2">
+                        <span id="oldSiteTotalEstimate">0</span> links discovered to crawl
                     </div>
-                    <div id="oldSiteProgressText" class="text-xs text-gray-500 mt-1">0% Complete</div>
+                    <div class="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2">
+                        <div id="oldSiteProgressBar" class="bg-blue-600 dark:bg-blue-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                    <div id="oldSiteProgressText" class="text-xs text-gray-500 dark:text-slate-400 mt-1">Discovering pages...</div>
                 </div>
                 
-                <div class="bg-indigo-50 rounded-lg p-4 border-2 border-indigo-200">
+                <div class="bg-indigo-50 dark:bg-indigo-900/30 rounded-lg p-4 border-2 border-indigo-200 dark:border-indigo-800">
                     <div class="flex items-center justify-between mb-2">
-                        <span class="text-sm font-semibold text-gray-700">New Site Scan Status</span>
-                        <span id="newSiteStatusBadge" class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">Waiting...</span>
+                        <span class="text-sm font-semibold text-gray-700 dark:text-slate-200">New Site Scan Status</span>
+                        <span id="newSiteStatusBadge" class="text-xs bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-slate-300 px-2 py-1 rounded-full">Waiting...</span>
                     </div>
-                    <div class="text-2xl font-bold text-indigo-600 mb-1">
-                        <span id="newSitePagesScanned">0</span> / <span id="newSiteTotalEstimate">0</span>
+                    <div class="text-2xl font-bold text-indigo-600 dark:text-indigo-400 mb-1">
+                        <span id="newSitePagesScanned">0</span> <span class="text-base font-normal text-gray-500 dark:text-slate-400">pages scanned</span>
                     </div>
-                    <div class="text-xs text-gray-600 mb-2">Pages Scanned</div>
-                    <div class="w-full bg-gray-200 rounded-full h-2">
-                        <div id="newSiteProgressBar" class="bg-indigo-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    <div class="text-xs text-gray-600 dark:text-slate-400 mb-2">
+                        <span id="newSiteTotalEstimate">0</span> links discovered to crawl
                     </div>
-                    <div id="newSiteProgressText" class="text-xs text-gray-500 mt-1">0% Complete</div>
+                    <div class="w-full bg-gray-200 dark:bg-slate-700 rounded-full h-2">
+                        <div id="newSiteProgressBar" class="bg-indigo-600 dark:bg-indigo-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                    <div id="newSiteProgressText" class="text-xs text-gray-500 dark:text-slate-400 mt-1">Waiting to start...</div>
                 </div>
             </div>
             
             <!-- Comparison Status Warning -->
-            <div id="comparisonStatusWarning" class="bg-amber-50 border-2 border-amber-300 rounded-lg p-4 mb-4">
+            <div id="comparisonStatusWarning" class="bg-amber-50 dark:bg-amber-900/30 border-2 border-amber-300 dark:border-amber-700 rounded-lg p-4 mb-4">
                 <div class="flex items-start">
                     <div class="flex-shrink-0">
-                        <svg class="h-5 w-5 text-amber-600" fill="currentColor" viewBox="0 0 20 20">
+                        <svg class="h-5 w-5 text-amber-600 dark:text-amber-400" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
                         </svg>
                     </div>
                     <div class="ml-3">
-                        <h4 class="text-sm font-semibold text-amber-800 mb-1">⚠️ Preliminary Comparison</h4>
-                        <p class="text-sm text-amber-700" id="comparisonStatusText">
+                        <h4 class="text-sm font-semibold text-amber-800 dark:text-amber-300 mb-1">⚠️ Preliminary Comparison</h4>
+                        <p class="text-sm text-amber-700 dark:text-amber-400" id="comparisonStatusText">
                             Comparison results are only accurate once <strong>both sites are 100% scanned</strong>.
                         </p>
                     </div>
@@ -252,68 +291,68 @@
             
             <!-- Stats Grid -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div class="bg-blue-50 rounded-lg p-4">
-                    <div class="text-sm text-gray-600 mb-1">Pages Scanned</div>
-                    <div class="text-2xl font-bold text-blue-600">
+                <div class="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-4 border border-blue-100 dark:border-blue-900">
+                    <div class="text-sm text-gray-600 dark:text-slate-400 mb-1">Pages Scanned</div>
+                    <div class="text-2xl font-bold text-blue-600 dark:text-blue-400">
                         <span id="statsOldPages">0</span> / <span id="statsNewPages">0</span>
                     </div>
-                    <div class="text-xs text-gray-500 mt-1">Old / New</div>
+                    <div class="text-xs text-gray-500 dark:text-slate-500 mt-1">Old / New</div>
                 </div>
                 
-                <div class="bg-green-50 rounded-lg p-4">
-                    <div class="text-sm text-gray-600 mb-1">Time Elapsed</div>
-                    <div class="text-2xl font-bold text-green-600" id="statsElapsedTime">0:00</div>
-                    <div class="text-xs text-gray-500 mt-1">MM:SS</div>
+                <div class="bg-green-50 dark:bg-green-900/30 rounded-lg p-4 border border-green-100 dark:border-green-900">
+                    <div class="text-sm text-gray-600 dark:text-slate-400 mb-1">Time Elapsed</div>
+                    <div class="text-2xl font-bold text-green-600 dark:text-green-400" id="statsElapsedTime">0:00</div>
+                    <div class="text-xs text-gray-500 dark:text-slate-500 mt-1">MM:SS</div>
                 </div>
                 
-                <div class="bg-purple-50 rounded-lg p-4">
-                    <div class="text-sm text-gray-600 mb-1">Estimated Time</div>
-                    <div class="text-2xl font-bold text-purple-600" id="statsETA">--</div>
-                    <div class="text-xs text-gray-500 mt-1">Remaining</div>
+                <div class="bg-purple-50 dark:bg-purple-900/30 rounded-lg p-4 border border-purple-100 dark:border-purple-900">
+                    <div class="text-sm text-gray-600 dark:text-slate-400 mb-1">Estimated Time</div>
+                    <div class="text-2xl font-bold text-purple-600 dark:text-purple-400" id="statsETA">--</div>
+                    <div class="text-xs text-gray-500 dark:text-slate-500 mt-1">Remaining</div>
                 </div>
                 
-                <div class="bg-yellow-50 rounded-lg p-4">
-                    <div class="text-sm text-gray-600 mb-1">Match Rate</div>
-                    <div class="text-2xl font-bold text-yellow-600" id="statsMatchPercent">0%</div>
-                    <div class="text-xs text-gray-500 mt-1">of old site pages found on new site</div>
+                <div class="bg-yellow-50 dark:bg-yellow-900/30 rounded-lg p-4 border border-yellow-100 dark:border-yellow-900">
+                    <div class="text-sm text-gray-600 dark:text-slate-400 mb-1">Match Rate</div>
+                    <div class="text-2xl font-bold text-yellow-600 dark:text-yellow-400" id="statsMatchPercent">0%</div>
+                    <div class="text-xs text-gray-500 dark:text-slate-500 mt-1">of old site pages found on new site</div>
                 </div>
             </div>
             
             <!-- Missing/New Counts -->
             <div class="grid grid-cols-2 gap-4 mt-4">
-                <div class="bg-red-50 rounded-lg p-4 relative" title="URLs on old site not found on new site">
-                    <div class="text-sm text-gray-600 mb-1">Missing on New</div>
-                    <div class="text-2xl font-bold text-red-600" id="statsMissingCount">0</div>
-                    <div class="text-xs text-gray-500 mt-1">URLs from old site not found on new</div>
+                <div class="bg-red-50 dark:bg-red-900/30 rounded-lg p-4 relative border border-red-100 dark:border-red-900" title="URLs on old site not found on new site">
+                    <div class="text-sm text-gray-600 dark:text-slate-400 mb-1">Missing on New</div>
+                    <div class="text-2xl font-bold text-red-600 dark:text-red-400" id="statsMissingCount">0</div>
+                    <div class="text-xs text-gray-500 dark:text-slate-500 mt-1">URLs from old site not found on new</div>
                     <div id="missingCountPreliminary" class="absolute top-2 right-2">
-                        <span class="text-xs bg-amber-200 text-amber-800 px-2 py-1 rounded-full">Preliminary</span>
+                        <span class="text-xs bg-amber-200 dark:bg-amber-800 text-amber-800 dark:text-amber-200 px-2 py-1 rounded-full">Preliminary</span>
                     </div>
                 </div>
                 
-                <div class="bg-indigo-50 rounded-lg p-4" title="URLs only on new site">
-                    <div class="text-sm text-gray-600 mb-1">New Only</div>
-                    <div class="text-2xl font-bold text-indigo-600" id="statsNewOnlyCount">0</div>
-                    <div class="text-xs text-gray-500 mt-1">URLs only on new site</div>
+                <div class="bg-indigo-50 dark:bg-indigo-900/30 rounded-lg p-4 border border-indigo-100 dark:border-indigo-900" title="URLs only on new site">
+                    <div class="text-sm text-gray-600 dark:text-slate-400 mb-1">New Only</div>
+                    <div class="text-2xl font-bold text-indigo-600 dark:text-indigo-400" id="statsNewOnlyCount">0</div>
+                    <div class="text-xs text-gray-500 dark:text-slate-500 mt-1">URLs only on new site</div>
                 </div>
             </div>
         </div>
         
         <!-- Progress Log -->
-        <div id="progressLog" class="hidden bg-gray-900 text-green-400 font-mono text-sm rounded-lg p-4 mb-4 max-h-96 overflow-y-auto">
-            <div class="flex justify-between items-center mb-2">
-                <span class="text-white font-semibold">Progress Log</span>
-                <button id="clearLog" class="text-gray-400 hover:text-white text-xs">Clear</button>
+        <div id="progressLog" class="hidden bg-gradient-to-b from-slate-900 to-slate-950 dark:from-[#0a0f1a] dark:to-[#050810] text-emerald-400 dark:text-emerald-300 font-mono text-sm rounded-xl p-4 mb-4 max-h-96 overflow-y-auto border border-slate-700 dark:border-slate-800 shadow-inner">
+            <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-700/50">
+                <span class="text-slate-200 font-semibold text-xs uppercase tracking-wider">📋 Progress Log</span>
+                <button id="clearLog" class="text-slate-500 hover:text-slate-300 text-xs transition-colors px-2 py-1 rounded hover:bg-slate-800">Clear</button>
             </div>
             <div id="progressContent" class="space-y-1"></div>
         </div>
         
         <!-- Error Message -->
-        <div id="error" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
+        <div id="error" class="hidden bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded-lg mb-4">
             <p id="errorMessage"></p>
         </div>
         
         <!-- Warning Message -->
-        <div id="warning" class="hidden bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded mb-4">
+        <div id="warning" class="hidden bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-800 text-yellow-800 dark:text-yellow-300 px-4 py-3 rounded-lg mb-4">
             <p class="font-semibold mb-2" id="warningTitle"></p>
             <ul id="warningList" class="list-disc list-inside text-sm space-y-1"></ul>
         </div>
@@ -321,90 +360,90 @@
         <!-- Results Section -->
         <div id="results" class="hidden">
             <!-- Summary Card -->
-            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg shadow-md p-6 mb-6 border border-blue-200">
-                <h3 class="text-xl font-bold text-gray-800 mb-4">📊 Comparison Summary</h3>
+            <div class="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-slate-800 dark:via-slate-800/95 dark:to-indigo-950/50 rounded-xl shadow-lg dark:shadow-slate-900/50 p-6 mb-6 border border-blue-200 dark:border-slate-700/50">
+                <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-4">📊 Comparison Summary</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <div class="bg-white rounded-lg p-4 border-2 border-blue-300">
+                    <div class="bg-white dark:bg-slate-900/50 rounded-lg p-4 border-2 border-blue-300 dark:border-blue-700">
                         <div class="flex items-center justify-between mb-2">
-                            <span class="text-sm font-medium text-gray-600">Old Site</span>
-                            <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Baseline</span>
+                            <span class="text-sm font-medium text-gray-600 dark:text-slate-300">Old Site</span>
+                            <span class="text-xs bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-300 px-2 py-1 rounded">Baseline</span>
                         </div>
-                        <div class="text-3xl font-bold text-blue-600 mb-1" id="summaryOldTotal">0</div>
-                        <div class="text-xs text-gray-500">Total URLs/Pages Found</div>
-                        <div id="summaryOldNote" class="text-xs text-gray-400 mt-2 italic"></div>
+                        <div class="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-1" id="summaryOldTotal">0</div>
+                        <div class="text-xs text-gray-500 dark:text-slate-400">Total URLs/Pages Found</div>
+                        <div id="summaryOldNote" class="text-xs text-gray-400 dark:text-slate-500 mt-2 italic"></div>
                     </div>
                     
-                    <div class="bg-white rounded-lg p-4 border-2 border-indigo-300">
+                    <div class="bg-white dark:bg-slate-900/50 rounded-lg p-4 border-2 border-indigo-300 dark:border-indigo-700">
                         <div class="flex items-center justify-between mb-2">
-                            <span class="text-sm font-medium text-gray-600">New Site</span>
-                            <span class="text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded">Comparison</span>
+                            <span class="text-sm font-medium text-gray-600 dark:text-slate-300">New Site</span>
+                            <span class="text-xs bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-300 px-2 py-1 rounded">Comparison</span>
                         </div>
-                        <div class="text-3xl font-bold text-indigo-600 mb-1" id="summaryNewTotal">0</div>
-                        <div class="text-xs text-gray-500">Total URLs/Pages Found</div>
-                        <div id="summaryNewNote" class="text-xs text-gray-400 mt-2 italic"></div>
+                        <div class="text-3xl font-bold text-indigo-600 dark:text-indigo-400 mb-1" id="summaryNewTotal">0</div>
+                        <div class="text-xs text-gray-500 dark:text-slate-400">Total URLs/Pages Found</div>
+                        <div id="summaryNewNote" class="text-xs text-gray-400 dark:text-slate-500 mt-2 italic"></div>
                     </div>
                 </div>
                 
-                <div id="summaryComparisonNote" class="hidden bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4">
-                    <p class="text-sm text-amber-800" id="summaryComparisonText"></p>
+                <div id="summaryComparisonNote" class="hidden bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-800 rounded-lg p-3 mb-4">
+                    <p class="text-sm text-amber-800 dark:text-amber-300" id="summaryComparisonText"></p>
                 </div>
                 
                 <!-- Number Breakdown -->
-                <div class="bg-white rounded-lg p-4 border border-gray-200 mb-4">
-                    <h4 class="text-sm font-semibold text-gray-700 mb-3">📊 How the numbers break down:</h4>
+                <div class="bg-white dark:bg-slate-900/50 rounded-lg p-4 border border-gray-200 dark:border-slate-700 mb-4">
+                    <h4 class="text-sm font-semibold text-gray-700 dark:text-slate-200 mb-3">📊 How the numbers break down:</h4>
                     <div class="space-y-2 text-sm">
-                        <div class="flex items-center justify-between py-2 border-b border-gray-100">
-                            <span class="text-gray-600">Old Site Total:</span>
-                            <span class="font-semibold text-gray-800" id="breakdownOldTotal">0</span>
+                        <div class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-slate-700">
+                            <span class="text-gray-600 dark:text-slate-400">Old Site Total:</span>
+                            <span class="font-semibold text-gray-800 dark:text-slate-200" id="breakdownOldTotal">0</span>
                         </div>
-                        <div class="flex items-center justify-between py-2 border-b border-gray-100">
-                            <span class="text-gray-600">= Matched (on both sites):</span>
-                            <span class="font-semibold text-green-600" id="breakdownMatched">0</span>
+                        <div class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-slate-700">
+                            <span class="text-gray-600 dark:text-slate-400">= Matched (on both sites):</span>
+                            <span class="font-semibold text-green-600 dark:text-green-400" id="breakdownMatched">0</span>
                         </div>
-                        <div class="flex items-center justify-between py-2 border-b border-gray-100">
-                            <span class="text-gray-600">+ Missing on New (only on old):</span>
-                            <span class="font-semibold text-red-600" id="breakdownMissing">0</span>
+                        <div class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-slate-700">
+                            <span class="text-gray-600 dark:text-slate-400">+ Missing on New (only on old):</span>
+                            <span class="font-semibold text-red-600 dark:text-red-400" id="breakdownMissing">0</span>
                         </div>
-                        <div class="mt-3 pt-2 border-t border-gray-200">
+                        <div class="mt-3 pt-2 border-t border-gray-200 dark:border-slate-600">
                             <div class="flex items-center justify-between py-2">
-                                <span class="text-gray-600">New Site Total:</span>
-                                <span class="font-semibold text-gray-800" id="breakdownNewTotal">0</span>
+                                <span class="text-gray-600 dark:text-slate-400">New Site Total:</span>
+                                <span class="font-semibold text-gray-800 dark:text-slate-200" id="breakdownNewTotal">0</span>
                             </div>
                             <div class="flex items-center justify-between py-2">
-                                <span class="text-gray-600">= Matched (on both sites):</span>
-                                <span class="font-semibold text-green-600" id="breakdownMatched2">0</span>
+                                <span class="text-gray-600 dark:text-slate-400">= Matched (on both sites):</span>
+                                <span class="font-semibold text-green-600 dark:text-green-400" id="breakdownMatched2">0</span>
                             </div>
                             <div class="flex items-center justify-between py-2">
-                                <span class="text-gray-600">+ New Only (only on new):</span>
-                                <span class="font-semibold text-indigo-600" id="breakdownNewOnly">0</span>
+                                <span class="text-gray-600 dark:text-slate-400">+ New Only (only on new):</span>
+                                <span class="font-semibold text-indigo-600 dark:text-indigo-400" id="breakdownNewOnly">0</span>
                             </div>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Category Explanations -->
-                <div class="bg-white rounded-lg p-4 border border-gray-200">
-                    <h4 class="text-sm font-semibold text-gray-700 mb-3">📖 What do these categories mean?</h4>
+                <div class="bg-white dark:bg-slate-900/50 rounded-lg p-4 border border-gray-200 dark:border-slate-700">
+                    <h4 class="text-sm font-semibold text-gray-700 dark:text-slate-200 mb-3">📖 What do these categories mean?</h4>
                     <div class="space-y-3 text-sm">
                         <div class="flex items-start">
-                            <span class="text-red-600 font-bold mr-2">•</span>
+                            <span class="text-red-600 dark:text-red-400 font-bold mr-2">•</span>
                             <div>
-                                <span class="font-semibold text-gray-800">Missing on New:</span>
-                                <span class="text-gray-600">Pages that exist on the old site but are missing from the new site. These need to be migrated or fixed.</span>
+                                <span class="font-semibold text-gray-800 dark:text-slate-200">Missing on New:</span>
+                                <span class="text-gray-600 dark:text-slate-400">Pages that exist on the old site but are missing from the new site. These need to be migrated or fixed.</span>
                             </div>
                         </div>
                         <div class="flex items-start">
-                            <span class="text-indigo-600 font-bold mr-2">•</span>
+                            <span class="text-indigo-600 dark:text-indigo-400 font-bold mr-2">•</span>
                             <div>
-                                <span class="font-semibold text-gray-800">New Only:</span>
-                                <span class="text-gray-600">Pages that only exist on the new site. These are new content created after the migration.</span>
+                                <span class="font-semibold text-gray-800 dark:text-slate-200">New Only:</span>
+                                <span class="text-gray-600 dark:text-slate-400">Pages that only exist on the new site. These are new content created after the migration.</span>
                             </div>
                         </div>
                         <div class="flex items-start">
-                            <span class="text-green-600 font-bold mr-2">•</span>
+                            <span class="text-green-600 dark:text-green-400 font-bold mr-2">•</span>
                             <div>
-                                <span class="font-semibold text-gray-800">Matched:</span>
-                                <span class="text-gray-600">Pages that exist on both sites. These were successfully migrated.</span>
+                                <span class="font-semibold text-gray-800 dark:text-slate-200">Matched:</span>
+                                <span class="text-gray-600 dark:text-slate-400">Pages that exist on both sites. These were successfully migrated.</span>
                             </div>
                         </div>
                     </div>
@@ -412,17 +451,17 @@
             </div>
             
             <!-- Tabs -->
-            <div class="bg-white rounded-lg shadow-md mb-4">
-                <div class="border-b border-gray-200">
+            <div class="bg-white dark:bg-slate-800 rounded-lg shadow-md dark:shadow-slate-900/50 mb-4">
+                <div class="border-b border-gray-200 dark:border-slate-700">
                     <nav class="flex -mb-px">
-                        <button data-tab="missing_on_new" class="tab-button px-6 py-3 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:text-gray-700 hover:border-gray-300 focus:outline-none">
-                            Missing on New <span id="count-missing_on_new" class="ml-2 bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs"></span>
+                        <button data-tab="missing_on_new" class="tab-button px-6 py-3 text-sm font-medium text-gray-500 dark:text-slate-400 border-b-2 border-transparent hover:text-gray-700 dark:hover:text-slate-200 hover:border-gray-300 dark:hover:border-slate-500 focus:outline-none">
+                            Missing on New <span id="count-missing_on_new" class="ml-2 bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300 px-2 py-1 rounded-full text-xs"></span>
                         </button>
-                        <button data-tab="new_only" class="tab-button px-6 py-3 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:text-gray-700 hover:border-gray-300 focus:outline-none">
-                            New Only <span id="count-new_only" class="ml-2 bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs"></span>
+                        <button data-tab="new_only" class="tab-button px-6 py-3 text-sm font-medium text-gray-500 dark:text-slate-400 border-b-2 border-transparent hover:text-gray-700 dark:hover:text-slate-200 hover:border-gray-300 dark:hover:border-slate-500 focus:outline-none">
+                            New Only <span id="count-new_only" class="ml-2 bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300 px-2 py-1 rounded-full text-xs"></span>
                         </button>
-                        <button data-tab="matched" class="tab-button px-6 py-3 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:text-gray-700 hover:border-gray-300 focus:outline-none">
-                            Matched <span id="count-matched" class="ml-2 bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs"></span>
+                        <button data-tab="matched" class="tab-button px-6 py-3 text-sm font-medium text-gray-500 dark:text-slate-400 border-b-2 border-transparent hover:text-gray-700 dark:hover:text-slate-200 hover:border-gray-300 dark:hover:border-slate-500 focus:outline-none">
+                            Matched <span id="count-matched" class="ml-2 bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 px-2 py-1 rounded-full text-xs"></span>
                         </button>
                     </nav>
                 </div>
@@ -430,31 +469,31 @@
             
             <!-- Export Buttons -->
             <div class="mb-4 flex justify-end gap-3">
-                <button id="exportBtn" class="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition duration-150">
+                <button id="exportBtn" class="bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 text-white py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-slate-900 transition duration-150">
                     Export CSV
                 </button>
-                <button id="exportAllBtn" class="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150">
+                <button id="exportAllBtn" class="bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 text-white py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-slate-900 transition duration-150">
                     Export All CSV
                 </button>
-                <button id="exportPdfBtn" class="bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition duration-150">
+                <button id="exportPdfBtn" class="bg-purple-600 hover:bg-purple-700 dark:bg-purple-700 dark:hover:bg-purple-600 text-white py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:focus:ring-offset-slate-900 transition duration-150">
                     📄 Export PDF Report
                 </button>
             </div>
             
             <!-- Table -->
-            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="bg-white dark:bg-slate-800 rounded-lg shadow-md dark:shadow-slate-900/50 overflow-hidden">
                 <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
+                    <table class="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
+                        <thead class="bg-gray-50 dark:bg-slate-900/50">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Full URL</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Path</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Full URL</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">Path</th>
                             </tr>
                         </thead>
-                        <tbody id="tableBody" class="bg-white divide-y divide-gray-200"></tbody>
+                        <tbody id="tableBody" class="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700"></tbody>
                     </table>
                 </div>
-                <div id="emptyMessage" class="hidden text-center py-8 text-gray-500">No items in this category.</div>
+                <div id="emptyMessage" class="hidden text-center py-8 text-gray-500 dark:text-slate-400">No items in this category.</div>
             </div>
         </div>
     </div>

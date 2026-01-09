@@ -71,29 +71,46 @@ export function updateProgressUI(data) {
  * Update site scan status card.
  * @param {string} site - 'old' or 'new'
  * @param {number} pages - Pages scanned
- * @param {number} estimate - Total estimate
+ * @param {number} discovered - Links discovered (queue size)
  * @param {number} percent - Completion percentage
  */
-function updateSiteStatus(site, pages, estimate, percent) {
+function updateSiteStatus(site, pages, discovered, percent) {
     const prefix = site === 'old' ? 'oldSite' : 'newSite';
     
     setText(`${prefix}PagesScanned`, pages);
-    setText(`${prefix}TotalEstimate`, estimate);
+    setText(`${prefix}TotalEstimate`, discovered);
     setWidth(`${prefix}ProgressBar`, `${Math.min(percent, 100)}%`);
-    setText(`${prefix}ProgressText`, `${percent.toFixed(1)}% Complete`);
+    
+    // Update progress text based on state
+    const progressText = getEl(`${prefix}ProgressText`);
+    if (progressText) {
+        if (percent >= 100) {
+            progressText.textContent = `✓ Complete - ${pages} pages found`;
+        } else if (pages > 0) {
+            // Show how many more links to crawl
+            const remaining = Math.max(0, discovered - pages);
+            if (remaining > 0) {
+                progressText.textContent = `${remaining} more links to crawl...`;
+            } else {
+                progressText.textContent = `Discovering more links...`;
+            }
+        } else {
+            progressText.textContent = site === 'old' ? 'Starting scan...' : 'Waiting to start...';
+        }
+    }
     
     // Update status badge
     const badge = getEl(`${prefix}StatusBadge`);
     if (badge) {
         if (percent >= 100) {
             badge.textContent = 'Complete';
-            badge.className = 'text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full';
+            badge.className = 'text-xs bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300 px-2 py-1 rounded-full';
         } else if (pages > 0) {
             badge.textContent = 'Scanning...';
-            badge.className = 'text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full';
+            badge.className = 'text-xs bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300 px-2 py-1 rounded-full';
         } else {
             badge.textContent = 'Waiting...';
-            badge.className = 'text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full';
+            badge.className = 'text-xs bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-slate-300 px-2 py-1 rounded-full';
         }
     }
 }
@@ -112,17 +129,17 @@ function updateComparisonWarning(oldPercent, newPercent, newPages) {
     
     if (bothComplete) {
         if (warning) {
-            warning.className = 'bg-green-50 border-2 border-green-300 rounded-lg p-4 mb-4';
+            warning.className = 'bg-green-50 dark:bg-green-900/30 border-2 border-green-300 dark:border-green-800 rounded-lg p-4 mb-4';
         }
         if (text) {
-            text.innerHTML = '<strong>✅ Comparison Complete!</strong> Both sites are 100% scanned. The results below are now accurate.';
+            text.innerHTML = '<strong class="text-green-700 dark:text-green-300">✅ Comparison Complete!</strong> Both sites are fully scanned. The results below are now accurate.';
         }
         if (preliminary) {
             preliminary.style.display = 'none';
         }
     } else if (newPages === 0) {
         if (text) {
-            text.innerHTML = 'Comparison results are only accurate once <strong>both sites are 100% scanned</strong>. ' +
+            text.innerHTML = 'Comparison results are only accurate once <strong>both sites are fully scanned</strong>. ' +
                 'The new site hasn\'t started scanning yet - the "Missing on New" count will be accurate once it begins.';
         }
         if (preliminary) {
@@ -130,7 +147,7 @@ function updateComparisonWarning(oldPercent, newPercent, newPages) {
         }
     } else {
         if (text) {
-            text.innerHTML = 'Comparison results are only accurate once <strong>both sites are 100% scanned</strong>. ' +
+            text.innerHTML = 'Comparison results are only accurate once <strong>both sites are fully scanned</strong>. ' +
                 'The "Missing on New" count will decrease as the new site is scanned and matches are found.';
         }
         if (preliminary) {
@@ -176,7 +193,7 @@ export function addProgressMessage(message) {
         color = 'text-green-300';
     }
     
-    div.innerHTML = `<span class="text-xs text-gray-500">[${timestamp}]</span> <span class="${color}">${message}</span>`;
+    div.innerHTML = `<span class="text-xs text-slate-500">[${timestamp}]</span> <span class="${color}">${message}</span>`;
     content.appendChild(div);
     
     // Auto-scroll

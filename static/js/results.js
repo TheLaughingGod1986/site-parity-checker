@@ -97,11 +97,11 @@ export function showTab(tabName) {
     // Update tab buttons
     document.querySelectorAll('.tab-button').forEach(btn => {
         if (btn.dataset.tab === tabName) {
-            btn.classList.add('border-blue-500', 'text-blue-600');
-            btn.classList.remove('text-gray-500', 'border-transparent');
+            btn.classList.add('border-blue-500', 'text-blue-600', 'dark:text-blue-400', 'dark:border-blue-400');
+            btn.classList.remove('text-gray-500', 'dark:text-slate-400', 'border-transparent');
         } else {
-            btn.classList.remove('border-blue-500', 'text-blue-600');
-            btn.classList.add('text-gray-500', 'border-transparent');
+            btn.classList.remove('border-blue-500', 'text-blue-600', 'dark:text-blue-400', 'dark:border-blue-400');
+            btn.classList.add('text-gray-500', 'dark:text-slate-400', 'border-transparent');
         }
     });
     
@@ -123,11 +123,11 @@ export function showTab(tabName) {
             tbody.innerHTML = urls.map(url => {
                 const path = new URL(url).pathname;
                 return `
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            <a href="${url}" target="_blank" class="text-blue-600 hover:text-blue-800">${url}</a>
+                    <tr class="hover:bg-gray-50 dark:hover:bg-slate-700/50">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-slate-200">
+                            <a href="${url}" target="_blank" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300">${url}</a>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${path}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-slate-400">${path}</td>
                     </tr>
                 `;
             }).join('');
