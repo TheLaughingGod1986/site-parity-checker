@@ -371,15 +371,20 @@ class SiteComparator:
             except Exception as e:
                 self._send_message(f"⚠️ Verification failed: {str(e)}")
         
+        # Calculate the CORRECT totals based on verification
+        # The math MUST work: Old Total = Matched + Missing, New Total = Matched + New Only
+        verified_old_total = len(matched) + len(missing_on_new)
+        verified_new_total = len(matched) + len(new_only)
+        
         # Final progress update - mark as complete
         if self.progress:
             self.progress.add_urls('old', old_urls)
             self.progress.add_urls('new', new_urls)
-            # Set final totals and mark as complete
-            self.progress.old_site.total_estimate = len(old_urls)
-            self.progress.new_site.total_estimate = len(new_urls)
-            self.progress.old_site.pages_scanned = len(old_urls)
-            self.progress.new_site.pages_scanned = len(new_urls)
+            # Set final totals based on verified counts (makes the math correct)
+            self.progress.old_site.total_estimate = verified_old_total
+            self.progress.new_site.total_estimate = verified_new_total
+            self.progress.old_site.pages_scanned = verified_old_total
+            self.progress.new_site.pages_scanned = verified_new_total
             # Update with verified comparison stats
             self.progress.set_verified_stats(
                 missing_count=len(missing_on_new),
@@ -392,8 +397,8 @@ class SiteComparator:
             missing_on_new=missing_on_new,
             new_only=new_only,
             matched=matched,
-            old_total=len(old_urls),
-            new_total=len(new_urls),
+            old_total=verified_old_total,
+            new_total=verified_new_total,
             old_sample_urls=list(old_urls)[:10],
             new_sample_urls=list(new_urls)[:10],
             old_sitemap=old_sitemap,
