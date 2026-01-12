@@ -1,0 +1,23 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: site-parity-checker
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount code for hot reload (development)
+      - ./app:/app/app
+      - ./templates:/app/templates
+      - ./static:/app/static
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    networks:
+      - site-parity-network
+
+networks:
+  site-parity-network:
+    driver: bridge
+

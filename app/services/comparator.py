@@ -82,6 +82,12 @@ class SiteComparator:
         self._send_message(f"Old site sitemap: {old_sitemap}")
         self._send_message(f"New site sitemap: {new_sitemap}")
         
+        # Track URLs by source for debugging
+        old_sitemap_urls: Set[str] = set()
+        new_sitemap_urls: Set[str] = set()
+        old_crawl_urls: Set[str] = set()
+        new_crawl_urls: Set[str] = set()
+        
         # Fetch sitemaps if needed
         if combine_methods or not use_crawl:
             self._send_message("📥 Fetching all sitemaps...")
@@ -137,7 +143,27 @@ class SiteComparator:
                 )
         
         if combine_methods:
-            self._send_message(f"✓ Combined: Old={len(old_urls)} total, New={len(new_urls)} total")
+            # Calculate overlap for debugging
+            old_overlap = len(old_sitemap_urls & old_crawl_urls)
+            new_overlap = len(new_sitemap_urls & new_crawl_urls)
+            old_unique_from_crawl = len(old_crawl_urls - old_sitemap_urls)
+            new_unique_from_crawl = len(new_crawl_urls - new_sitemap_urls)
+            
+            self._send_message(f"✓ Combined results:")
+            self._send_message(f"   Old site: {len(old_sitemap_urls)} from sitemap, {len(old_crawl_urls)} from crawl")
+            self._send_message(f"   Old site: {old_overlap} overlap, {old_unique_from_crawl} unique from crawl")
+            self._send_message(f"   New site: {len(new_sitemap_urls)} from sitemap, {len(new_crawl_urls)} from crawl")
+            self._send_message(f"   New site: {new_overlap} overlap, {new_unique_from_crawl} unique from crawl")
+            self._send_message(f"   Final totals: Old={len(old_urls)}, New={len(new_urls)}")
+            
+            # Warn if crawl didn't find many unique URLs
+            if old_unique_from_crawl < 10 and len(old_sitemap_urls) > 0:
+                self._send_message(f"⚠️ WARNING: Crawl only found {old_unique_from_crawl} unique URLs beyond sitemap!")
+                self._send_message(f"   This suggests the sitemap may be complete, OR the crawl isn't discovering new links.")
+                self._send_message(f"   If you expected more pages, check if:")
+                self._send_message(f"   - The sitemap has changed and now has fewer URLs")
+                self._send_message(f"   - Pages aren't linked from the homepage or discovered pages")
+                self._send_message(f"   - robots.txt is blocking important pages")
         
         # Compare
         return self._compare_urls(
